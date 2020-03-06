@@ -1,6 +1,7 @@
 # IoTConnect OpenWeatherMap
 
-This repo is a demonstration project for writing a weather information publisher in the IoTConnect standard. It obtains current weather using openweathermap and publishes this on the mqtt message bus for further consumption.
+This demonstration project written in golang publishes weather information onto an MQTT message bus following the IoTConnect standard. It obtains current weather using openweathermap.
 
 ## Status
+Basic functional source.
 work in progress...
