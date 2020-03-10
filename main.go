@@ -8,7 +8,7 @@ import (
 	"github.com/hspaay/iotconnect.golang/messenger"
 	"github.com/hspaay/iotconnect.golang/publisher"
 	"github.com/hspaay/iotconnect.golang/standard"
-	"github.com/hspaay/iotzone.myweather/openweathermap"
+	"github.com/hspaay/iotconnect.openweathermap/openweathermap"
 	"github.com/sirupsen/logrus"
 )
 
@@ -48,7 +48,7 @@ func Discover(weatherPub *publisher.PublisherState) {
 }
 
 // Poll obtains the weather and updates the output value
-// The iotzone library will automatically publish the output discovery and values.
+// The iotconnect library will automatically publish the output discovery and values.
 func Poll(weatherPub *publisher.PublisherState) {
 	pubNode := weatherPub.GetNodeByID(standard.PublisherNodeID)
 	apikey := pubNode.Config["apikey"].Value

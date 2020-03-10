@@ -1,4 +1,4 @@
-module github.com/hspaay/iotzone.myweather
+module github.com/hspaay/iotconnect.openweathermap
 
 go 1.13
 
