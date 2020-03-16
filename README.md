@@ -5,3 +5,11 @@ This demonstration project written in golang publishes weather information onto 
 ## Status
 Basic functional source.
 work in progress...
+
+## Configuration
+
+Two configuration files are expected:
+1. ~/bin/iotconnect/config/iotconnect.conf which is used by with all publishers
+2. ~/bin/iotconnect/config/openweathermap.conf with api key and cities
+
+See config files in ./test as examples
