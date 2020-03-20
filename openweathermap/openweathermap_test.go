@@ -36,7 +36,6 @@ func TestNewPublisher(t *testing.T) {
 	if !assert.NotNil(t, weatherApp.APIKey, "Missing apikey in configuration") {
 		return
 	}
-
 	weatherPub.Stop()
 }
 
@@ -51,6 +50,22 @@ func TestPublishWeather(t *testing.T) {
 	weatherPub.Start(false, nil, nil)
 	weatherApp.PublishNodes(weatherPub)
 	weatherApp.UpdateWeather(weatherPub)
+
+	time.Sleep(time.Second * 3)
+	weatherPub.Stop()
+}
+
+func TestPublishForecast(t *testing.T) {
+	var testMessenger = messenger.NewDummyMessenger()
+	weatherPub := publisher.NewPublisher(zoneID, PublisherID, testMessenger)
+
+	err := config.LoadAppConfig(configFolder, PublisherID, nil, &weatherApp)
+	if !assert.NoErrorf(t, err, "Missing app configuration for publisher %s: %s", PublisherID, err) {
+		return
+	}
+	weatherPub.Start(false, nil, nil)
+	weatherApp.PublishNodes(weatherPub)
+	weatherApp.UpdateForecast(weatherPub)
 
 	time.Sleep(time.Second * 3)
 	weatherPub.Stop()
