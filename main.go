@@ -22,7 +22,13 @@ func main() {
 	weatherPub.SetDiscoveryInterval(0, weatherApp.PublishNodes)
 	// Update the forecast once an hour
 	weatherPub.SetPollInterval(3600, weatherApp.UpdateWeather)
-	// Handle commands to delete/remove a city node
+
+	// handle update of node configuraiton
+	weatherPub.SetNodeConfigHandler(weatherApp.OnNodeConfigHandler)
+	// handle update of node inputs
+	// weatherPub.SetNodeInputHandler( weatherApp.OnNodeInputHandler)
+
+	// Handle input commands to delete/remove a city node
 	// weatherPub.SetNodeCommandHandler(standard.CommandCreate, onAddCity)
 	// weatherPub.SetNodeCommandHandler(standard.CommandDelete, onRemoveCity)
 	// Handle city node configuration
@@ -30,7 +36,7 @@ func main() {
 	// Handle set command (n/a)
 	// weatherPub.SetNodeCommandHandler(standard.CommandInput, onInput)
 
-	weatherPub.Start(false, nil, nil)
+	weatherPub.Start(false)
 	weatherPub.WaitForSignal()
 	weatherPub.Stop()
 }

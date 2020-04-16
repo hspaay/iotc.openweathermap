@@ -8,6 +8,7 @@ import (
 	"github.com/hspaay/iotconnect.golang/messenger"
 	"github.com/hspaay/iotconnect.golang/publisher"
 	"github.com/hspaay/iotconnect.golang/standard"
+	"github.com/sirupsen/logrus"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -28,7 +29,7 @@ func TestNewPublisher(t *testing.T) {
 	var testMessenger = messenger.NewDummyMessenger()
 	weatherPub := publisher.NewPublisher(zoneID, PublisherID, testMessenger)
 
-	weatherPub.Start(false, nil, nil)
+	weatherPub.Start(false)
 	weatherApp.PublishNodes(weatherPub)
 	// pubNode := weatherPub.GetNodeByID(standard.PublisherNodeID)
 	// apikeyConfig := pubNode.Config[APIKEY_CONFIG]
@@ -47,7 +48,7 @@ func TestPublishWeather(t *testing.T) {
 	if !assert.NoErrorf(t, err, "Missing app configuration for publisher %s: %s", PublisherID, err) {
 		return
 	}
-	weatherPub.Start(false, nil, nil)
+	weatherPub.Start(false)
 	weatherApp.PublishNodes(weatherPub)
 	weatherApp.UpdateWeather(weatherPub)
 
@@ -63,10 +64,29 @@ func TestPublishForecast(t *testing.T) {
 	if !assert.NoErrorf(t, err, "Missing app configuration for publisher %s: %s", PublisherID, err) {
 		return
 	}
-	weatherPub.Start(false, nil, nil)
+	weatherPub.Start(false)
 	weatherApp.PublishNodes(weatherPub)
 	weatherApp.UpdateForecast(weatherPub)
 
 	time.Sleep(time.Second * 3)
+	weatherPub.Stop()
+}
+
+func TestMain(t *testing.T) {
+	logger := logrus.New()
+
+	messengerConfig := &messenger.MessengerConfig{}
+	weatherApp := NewWeatherApp()
+	config.LoadAppConfig("", weatherApp.PublisherID, messengerConfig, &weatherApp)
+
+	messenger := messenger.NewMqttMessenger(messengerConfig, logger)
+	weatherPub := publisher.NewPublisher(messengerConfig.Zone, weatherApp.PublisherID, messenger)
+
+	// Discover the node(s) and outputs. Use default for republishing discovery
+	weatherPub.SetDiscoveryInterval(0, weatherApp.PublishNodes)
+	weatherPub.SetPollInterval(30, weatherApp.UpdateWeather)
+
+	weatherPub.Start(false)
+	time.Sleep(time.Minute * 60)
 	weatherPub.Stop()
 }
