@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/hspaay/iotconnect.golang/nodes"
 	"github.com/hspaay/iotconnect.golang/publisher"
 	"github.com/hspaay/iotconnect.golang/standard"
 )
@@ -42,26 +43,26 @@ func (weatherApp *WeatherApp) PublishNodes(weatherPub *publisher.PublisherState)
 
 	// Create a node for each city with temperature outputs
 	for _, city := range weatherApp.Cities {
-		cityNode := standard.NewNode(zone, weatherApp.PublisherID, city)
+		cityNode := nodes.NewNode(zone, weatherApp.PublisherID, city)
 		weatherPub.Nodes.UpdateNode(cityNode)
 
-		lc := standard.NewConfig("language", standard.DataTypeEnum, "Reporting language. See https://openweathermap.org/current for more options", "en")
-		weatherPub.Nodes.UpdateNodeConfig(cityNode, lc)
+		lc := nodes.NewConfigAttr("language", nodes.DataTypeEnum, "Reporting language. See https://openweathermap.org/current for more options", "en")
+		weatherPub.Nodes.UpdateNodeConfig(cityNode.Address, lc)
 
 		// Add individual outputs for each weather info type
-		outputs.NewOutput(cityNode, standard.IOTypeWeather, CurrentWeatherInst)
-		outputs.NewOutput(cityNode, standard.IOTypeTemperature, CurrentWeatherInst)
-		outputs.NewOutput(cityNode, standard.IOTypeHumidity, CurrentWeatherInst)
-		outputs.NewOutput(cityNode, standard.IOTypeAtmosphericPressure, CurrentWeatherInst)
-		outputs.NewOutput(cityNode, standard.IOTypeWindHeading, CurrentWeatherInst)
-		outputs.NewOutput(cityNode, standard.IOTypeWindSpeed, CurrentWeatherInst)
-		outputs.NewOutput(cityNode, standard.IOTypeRain, LastHourWeatherInst)
-		outputs.NewOutput(cityNode, standard.IOTypeSnow, LastHourWeatherInst)
+		outputs.NewOutput(cityNode, nodes.OutputTypeWeather, CurrentWeatherInst)
+		outputs.NewOutput(cityNode, nodes.OutputTypeTemperature, CurrentWeatherInst)
+		outputs.NewOutput(cityNode, nodes.OutputTypeHumidity, CurrentWeatherInst)
+		outputs.NewOutput(cityNode, nodes.OutputTypeAtmosphericPressure, CurrentWeatherInst)
+		outputs.NewOutput(cityNode, nodes.OutputTypeWindHeading, CurrentWeatherInst)
+		outputs.NewOutput(cityNode, nodes.OutputTypeWindSpeed, CurrentWeatherInst)
+		outputs.NewOutput(cityNode, nodes.OutputTypeRain, LastHourWeatherInst)
+		outputs.NewOutput(cityNode, nodes.OutputTypeSnow, LastHourWeatherInst)
 
 		// todo: Add outputs for various forecasts. This needs a paid account so maybe some other time.
-		outputs.NewOutput(cityNode, standard.IOTypeWeather, ForecastWeatherInst)
-		outputs.NewOutput(cityNode, standard.IOTypeTemperature, "max")
-		outputs.NewOutput(cityNode, standard.IOTypeAtmosphericPressure, "min")
+		outputs.NewOutput(cityNode, nodes.OutputTypeWeather, ForecastWeatherInst)
+		outputs.NewOutput(cityNode, nodes.OutputTypeTemperature, "max")
+		outputs.NewOutput(cityNode, nodes.OutputTypeAtmosphericPressure, "min")
 	}
 }
 
@@ -80,7 +81,7 @@ func (weatherApp *WeatherApp) UpdateWeather(weatherPub *publisher.PublisherState
 
 	// publish the current weather for each of the city nodes
 	for _, node := range weatherPub.Nodes.GetAllNodes() {
-		if node.ID != standard.PublisherNodeID {
+		if node.ID != nodes.PublisherNodeID {
 			language := node.Config["language"].Value
 			currentWeather, err := GetCurrentWeather(apikey, node.ID, language)
 			if err != nil {
@@ -91,14 +92,14 @@ func (weatherApp *WeatherApp) UpdateWeather(weatherPub *publisher.PublisherState
 			if len(currentWeather.Weather) > 0 {
 				weatherDescription = currentWeather.Weather[0].Description
 			}
-			outputHistory.UpdateOutputValue(node, standard.IOTypeWeather, CurrentWeatherInst, weatherDescription)
-			outputHistory.UpdateOutputValue(node, standard.IOTypeTemperature, CurrentWeatherInst, fmt.Sprintf("%.1f", currentWeather.Main.Temperature))
-			outputHistory.UpdateOutputValue(node, standard.IOTypeHumidity, CurrentWeatherInst, fmt.Sprintf("%d", currentWeather.Main.Humidity))
-			outputHistory.UpdateOutputValue(node, standard.IOTypeAtmosphericPressure, CurrentWeatherInst, fmt.Sprintf("%.0f", currentWeather.Main.Pressure))
-			outputHistory.UpdateOutputValue(node, standard.IOTypeWindSpeed, CurrentWeatherInst, fmt.Sprintf("%.1f", currentWeather.Wind.Speed))
-			outputHistory.UpdateOutputValue(node, standard.IOTypeWindHeading, CurrentWeatherInst, fmt.Sprintf("%.0f", currentWeather.Wind.Heading))
-			outputHistory.UpdateOutputValue(node, standard.IOTypeRain, LastHourWeatherInst, fmt.Sprintf("%.1f", currentWeather.Rain.LastHour*1000))
-			outputHistory.UpdateOutputValue(node, standard.IOTypeSnow, LastHourWeatherInst, fmt.Sprintf("%.1f", currentWeather.Snow.LastHour*1000))
+			outputHistory.UpdateOutputValue(node, nodes.OutputTypeWeather, CurrentWeatherInst, weatherDescription)
+			outputHistory.UpdateOutputValue(node, nodes.OutputTypeTemperature, CurrentWeatherInst, fmt.Sprintf("%.1f", currentWeather.Main.Temperature))
+			outputHistory.UpdateOutputValue(node, nodes.OutputTypeHumidity, CurrentWeatherInst, fmt.Sprintf("%d", currentWeather.Main.Humidity))
+			outputHistory.UpdateOutputValue(node, nodes.OutputTypeAtmosphericPressure, CurrentWeatherInst, fmt.Sprintf("%.0f", currentWeather.Main.Pressure))
+			outputHistory.UpdateOutputValue(node, nodes.OutputTypeWindSpeed, CurrentWeatherInst, fmt.Sprintf("%.1f", currentWeather.Wind.Speed))
+			outputHistory.UpdateOutputValue(node, nodes.OutputTypeWindHeading, CurrentWeatherInst, fmt.Sprintf("%.0f", currentWeather.Wind.Heading))
+			outputHistory.UpdateOutputValue(node, nodes.OutputTypeRain, LastHourWeatherInst, fmt.Sprintf("%.1f", currentWeather.Rain.LastHour*1000))
+			outputHistory.UpdateOutputValue(node, nodes.OutputTypeSnow, LastHourWeatherInst, fmt.Sprintf("%.1f", currentWeather.Snow.LastHour*1000))
 		}
 	}
 
@@ -115,7 +116,7 @@ func (weatherApp *WeatherApp) UpdateForecast(weatherPub *publisher.PublisherStat
 
 	// publish the daily forecast weather for each of the city nodes
 	for _, node := range weatherPub.Nodes.GetAllNodes() {
-		if node.ID != standard.PublisherNodeID {
+		if node.ID != nodes.PublisherNodeID {
 			language := node.Config["language"].Value
 			dailyForecast, err := GetDailyForecast(apikey, node.ID, language)
 			if err != nil {
@@ -143,16 +144,16 @@ func (weatherApp *WeatherApp) UpdateForecast(weatherPub *publisher.PublisherStat
 				maxTempList = append(maxTempList, &standard.HistoryValue{Timestamp: timestamp, Value: fmt.Sprintf("%.1f", forecast.Temp.Max)})
 				minTempList = append(maxTempList, &standard.HistoryValue{Timestamp: timestamp, Value: fmt.Sprintf("%.1f", forecast.Temp.Min)})
 			}
-			weatherPub.UpdateForecast(node, standard.IOTypeWeather, ForecastWeatherInst, weatherList)
-			weatherPub.UpdateForecast(node, standard.IOTypeTemperature, "max", maxTempList)
-			weatherPub.UpdateForecast(node, standard.IOTypeTemperature, "min", minTempList)
+			weatherPub.UpdateForecast(node, nodes.OutputTypeWeather, ForecastWeatherInst, weatherList)
+			weatherPub.UpdateForecast(node, nodes.OutputTypeTemperature, "max", maxTempList)
+			weatherPub.UpdateForecast(node, nodes.OutputTypeTemperature, "min", minTempList)
 
 		}
 	}
 }
 
 // OnNodeConfigHandler handles requests to update node configuration
-func (weatherApp *WeatherApp) OnNodeConfigHandler(node *standard.Node, config standard.AttrMap) standard.AttrMap {
+func (weatherApp *WeatherApp) OnNodeConfigHandler(node *nodes.Node, config nodes.AttrMap) nodes.AttrMap {
 	return nil
 }
 

@@ -36,7 +36,7 @@ func main() {
 	// Handle set command (n/a)
 	// weatherPub.SetNodeCommandHandler(standard.CommandInput, onInput)
 
-	weatherPub.Start(false)
+	weatherPub.Start()
 	weatherPub.WaitForSignal()
 	weatherPub.Stop()
 }

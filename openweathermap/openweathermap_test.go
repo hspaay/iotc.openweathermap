@@ -29,7 +29,7 @@ func TestNewPublisher(t *testing.T) {
 	var testMessenger = messenger.NewDummyMessenger()
 	weatherPub := publisher.NewPublisher(zoneID, PublisherID, testMessenger)
 
-	weatherPub.Start(false)
+	weatherPub.Start()
 	weatherApp.PublishNodes(weatherPub)
 	// pubNode := weatherPub.GetNodeByID(standard.PublisherNodeID)
 	// apikeyConfig := pubNode.Config[APIKEY_CONFIG]
@@ -48,7 +48,7 @@ func TestPublishWeather(t *testing.T) {
 	if !assert.NoErrorf(t, err, "Missing app configuration for publisher %s: %s", PublisherID, err) {
 		return
 	}
-	weatherPub.Start(false)
+	weatherPub.Start()
 	weatherApp.PublishNodes(weatherPub)
 	weatherApp.UpdateWeather(weatherPub)
 
@@ -64,7 +64,7 @@ func TestPublishForecast(t *testing.T) {
 	if !assert.NoErrorf(t, err, "Missing app configuration for publisher %s: %s", PublisherID, err) {
 		return
 	}
-	weatherPub.Start(false)
+	weatherPub.Start()
 	weatherApp.PublishNodes(weatherPub)
 	weatherApp.UpdateForecast(weatherPub)
 
@@ -86,7 +86,7 @@ func TestMain(t *testing.T) {
 	weatherPub.SetDiscoveryInterval(0, weatherApp.PublishNodes)
 	weatherPub.SetPollInterval(30, weatherApp.UpdateWeather)
 
-	weatherPub.Start(false)
+	weatherPub.Start()
 	time.Sleep(time.Minute * 60)
 	weatherPub.Stop()
 }
