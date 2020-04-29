@@ -1,8 +1,8 @@
 package main
 
 import (
-	"github.com/hspaay/iotconnect.golang/config"
 	"github.com/hspaay/iotconnect.golang/messenger"
+	"github.com/hspaay/iotconnect.golang/persist"
 	"github.com/hspaay/iotconnect.golang/publisher"
 	"github.com/hspaay/iotconnect.openweathermap/openweathermap"
 	"github.com/sirupsen/logrus"
@@ -11,12 +11,14 @@ import (
 func main() {
 	logger := logrus.New()
 
+	configFolder := persist.DefaultConfigFolder
 	messengerConfig := &messenger.MessengerConfig{}
 	weatherApp := openweathermap.NewWeatherApp()
-	config.LoadAppConfig("", weatherApp.PublisherID, messengerConfig, &weatherApp)
+	persist.LoadMessengerConfig(configFolder, messengerConfig)
+	persist.LoadAppConfig(configFolder, weatherApp.PublisherID, &weatherApp)
 
 	messenger := messenger.NewMqttMessenger(messengerConfig, logger)
-	weatherPub := publisher.NewPublisher(messengerConfig.Zone, weatherApp.PublisherID, messenger)
+	weatherPub := publisher.NewPublisher(weatherApp.PublisherID, messenger, configFolder)
 
 	// Discover the node(s) and outputs. Use default for republishing discovery
 	weatherPub.SetDiscoveryInterval(0, weatherApp.PublishNodes)
