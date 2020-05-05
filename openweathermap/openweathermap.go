@@ -6,9 +6,9 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/hspaay/iotconnect.golang/messaging"
-	"github.com/hspaay/iotconnect.golang/nodes"
-	"github.com/hspaay/iotconnect.golang/publisher"
+	"github.com/hspaay/iotc.golang/messaging"
+	"github.com/hspaay/iotc.golang/nodes"
+	"github.com/hspaay/iotc.golang/publisher"
 )
 
 // CurrentWeatherInst instance name for current weather

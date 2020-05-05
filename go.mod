@@ -1,12 +1,12 @@
-module github.com/hspaay/iotconnect.openweathermap
+module github.com/hspaay/iotc.openweathermap
 
 go 1.13
 
 require (
-	github.com/hspaay/iotconnect.golang v0.0.0-00010101000000-000000000000
+	github.com/hspaay/iotc.golang v0.0.0-20200418081053-7ded037c794f
 	github.com/sirupsen/logrus v1.5.0
 	github.com/stretchr/testify v1.5.1
 )
 
-// Temporary for testing iotconnect.golang
-replace github.com/hspaay/iotconnect.golang => ../iotconnect.golang
+// Temporary for testing iotc.golang
+replace github.com/hspaay/iotc.golang => ../iotc.golang

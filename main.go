@@ -1,10 +1,10 @@
 package main
 
 import (
-	"github.com/hspaay/iotconnect.golang/messenger"
-	"github.com/hspaay/iotconnect.golang/persist"
-	"github.com/hspaay/iotconnect.golang/publisher"
-	"github.com/hspaay/iotconnect.openweathermap/openweathermap"
+	"github.com/hspaay/iotc.golang/messenger"
+	"github.com/hspaay/iotc.golang/persist"
+	"github.com/hspaay/iotc.golang/publisher"
+	"github.com/hspaay/iotc.openweathermap/openweathermap"
 	"github.com/sirupsen/logrus"
 )
 
