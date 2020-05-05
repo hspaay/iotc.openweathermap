@@ -9,7 +9,7 @@ work in progress...
 ## Configuration
 
 Two configuration files are expected:
-1. ~/bin/iotconnect/config/iotc.conf which is used by with all publishers
-2. ~/bin/iotconnect/config/openweathermap.conf with api key and cities
+1. ~/bin/iotc/config/iotc.conf which is used by with all publishers
+2. ~/bin/iotc/config/openweathermap.conf with api key and cities
 
 See config files in ./test as examples
