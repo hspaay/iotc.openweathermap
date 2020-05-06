@@ -1,10 +1,10 @@
-package openweathermap
+package internal
 
 import (
 	"testing"
 	"time"
 
-	"github.com/hspaay/iotc.golang/messaging"
+	"github.com/hspaay/iotc.golang/iotc"
 	"github.com/hspaay/iotc.golang/messenger"
 	"github.com/hspaay/iotc.golang/persist"
 	"github.com/hspaay/iotc.golang/publisher"
@@ -12,14 +12,15 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-const zoneID = messaging.LocalZoneID
-const configFolder = "./test"
+const zoneID = iotc.TestZoneID
+const configFolder = "../test"
 
-var messengerConfig = &messenger.MessengerConfig{}
+var messengerConfig = &messenger.MessengerConfig{Zone: zoneID}
 
 var weatherApp = WeatherApp{
-	APIKey: "please register",
-	Cities: []string{"Amsterdam", "Vancouver"},
+	APIKey:      "please register",
+	Cities:      []string{"Amsterdam", "Vancouver"},
+	PublisherID: AppID,
 }
 
 // TestNewPublisher instance
@@ -30,7 +31,7 @@ func TestNewPublisher(t *testing.T) {
 	// config.LoadAppConfig("", publisherID, nil, &testConfig)
 	persist.LoadMessengerConfig(configFolder, messengerConfig)
 	testMessenger := messenger.NewDummyMessenger(messengerConfig, nil)
-	weatherPub := publisher.NewPublisher(PublisherID, testMessenger, configFolder)
+	weatherPub := publisher.NewPublisher(messengerConfig.Zone, weatherApp.PublisherID, testMessenger, configFolder)
 
 	weatherPub.Start()
 	weatherApp.PublishNodes(weatherPub)
@@ -44,10 +45,10 @@ func TestNewPublisher(t *testing.T) {
 func TestPublishWeather(t *testing.T) {
 	persist.LoadMessengerConfig(configFolder, messengerConfig)
 	testMessenger := messenger.NewDummyMessenger(messengerConfig, nil)
-	weatherPub := publisher.NewPublisher(PublisherID, testMessenger, configFolder)
+	weatherPub := publisher.NewPublisher(messengerConfig.Zone, weatherApp.PublisherID, testMessenger, configFolder)
 
-	err := persist.LoadAppConfig(configFolder, PublisherID, &weatherApp)
-	if !assert.NoErrorf(t, err, "Missing app configuration for publisher %s: %s", PublisherID, err) {
+	err := persist.LoadAppConfig(configFolder, AppID, &weatherApp)
+	if !assert.NoErrorf(t, err, "Missing app configuration for publisher %s: %s", AppID, err) {
 		return
 	}
 	weatherPub.Start()
@@ -61,10 +62,10 @@ func TestPublishWeather(t *testing.T) {
 func TestPublishForecast(t *testing.T) {
 	persist.LoadMessengerConfig(configFolder, messengerConfig)
 	testMessenger := messenger.NewDummyMessenger(messengerConfig, nil)
-	weatherPub := publisher.NewPublisher(PublisherID, testMessenger, configFolder)
+	weatherPub := publisher.NewPublisher(messengerConfig.Zone, weatherApp.PublisherID, testMessenger, configFolder)
 
-	err := persist.LoadAppConfig(configFolder, PublisherID, &weatherApp)
-	if !assert.NoErrorf(t, err, "Missing app configuration for publisher %s: %s", PublisherID, err) {
+	err := persist.LoadAppConfig(configFolder, AppID, &weatherApp)
+	if !assert.NoErrorf(t, err, "Missing app configuration for publisher %s: %s", AppID, err) {
 		return
 	}
 	weatherPub.Start()
@@ -83,7 +84,7 @@ func TestMain(t *testing.T) {
 	persist.LoadMessengerConfig(configFolder, messengerConfig)
 
 	messenger := messenger.NewMqttMessenger(messengerConfig, logger)
-	weatherPub := publisher.NewPublisher(weatherApp.PublisherID, messenger, configFolder)
+	weatherPub := publisher.NewPublisher(messengerConfig.Zone, weatherApp.PublisherID, messenger, configFolder)
 
 	// Discover the node(s) and outputs. Use default for republishing discovery
 	weatherPub.SetDiscoveryInterval(0, weatherApp.PublishNodes)

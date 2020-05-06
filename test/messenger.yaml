@@ -5,4 +5,5 @@ server: "localhost"
 login: ""
 credentials: ""
 
-zone: "local"
+# override the zone
+# zone: "local"
