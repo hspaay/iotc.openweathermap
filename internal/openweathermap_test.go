@@ -31,7 +31,8 @@ func TestNewPublisher(t *testing.T) {
 	// config.LoadAppConfig("", publisherID, nil, &testConfig)
 	persist.LoadMessengerConfig(configFolder, messengerConfig)
 	testMessenger := messenger.NewDummyMessenger(messengerConfig, nil)
-	weatherPub := publisher.NewPublisher(messengerConfig.Zone, weatherApp.PublisherID, testMessenger, configFolder)
+	weatherPub := publisher.NewPublisher(messengerConfig.Zone, weatherApp.PublisherID, testMessenger)
+	// weatherPub.PersistNodes(configFolder, false)
 
 	weatherPub.Start()
 	weatherApp.PublishNodes(weatherPub)
@@ -45,7 +46,8 @@ func TestNewPublisher(t *testing.T) {
 func TestPublishWeather(t *testing.T) {
 	persist.LoadMessengerConfig(configFolder, messengerConfig)
 	testMessenger := messenger.NewDummyMessenger(messengerConfig, nil)
-	weatherPub := publisher.NewPublisher(messengerConfig.Zone, weatherApp.PublisherID, testMessenger, configFolder)
+	weatherPub := publisher.NewPublisher(messengerConfig.Zone, weatherApp.PublisherID, testMessenger)
+	// weatherPub.PersistNodes(configFolder, false)
 
 	err := persist.LoadAppConfig(configFolder, AppID, &weatherApp)
 	if !assert.NoErrorf(t, err, "Missing app configuration for publisher %s: %s", AppID, err) {
@@ -62,7 +64,8 @@ func TestPublishWeather(t *testing.T) {
 func TestPublishForecast(t *testing.T) {
 	persist.LoadMessengerConfig(configFolder, messengerConfig)
 	testMessenger := messenger.NewDummyMessenger(messengerConfig, nil)
-	weatherPub := publisher.NewPublisher(messengerConfig.Zone, weatherApp.PublisherID, testMessenger, configFolder)
+	weatherPub := publisher.NewPublisher(messengerConfig.Zone, weatherApp.PublisherID, testMessenger)
+	// weatherPub.PersistNodes(configFolder, false)
 
 	err := persist.LoadAppConfig(configFolder, AppID, &weatherApp)
 	if !assert.NoErrorf(t, err, "Missing app configuration for publisher %s: %s", AppID, err) {
@@ -84,7 +87,8 @@ func TestMain(t *testing.T) {
 	persist.LoadMessengerConfig(configFolder, messengerConfig)
 
 	messenger := messenger.NewMqttMessenger(messengerConfig, logger)
-	weatherPub := publisher.NewPublisher(messengerConfig.Zone, weatherApp.PublisherID, messenger, configFolder)
+	weatherPub := publisher.NewPublisher(messengerConfig.Zone, weatherApp.PublisherID, messenger)
+	// weatherPub.PersistNodes(configFolder, false)
 
 	// Discover the node(s) and outputs. Use default for republishing discovery
 	weatherPub.SetDiscoveryInterval(0, weatherApp.PublishNodes)

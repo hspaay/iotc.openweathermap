@@ -1,4 +1,4 @@
-// Package openweathermap demonstrates building a simple IoTConnect publisher for weather forecasts
+// Package internal demonstrates building a simple IoTConnect publisher for weather forecasts
 // This publishes the current weather for the cities
 package internal
 
