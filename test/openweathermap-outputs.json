@@ -1,15 +1,15 @@
 [
   {
-    "address": "test/openweathermap/Amsterdam/$output/atmosphericpressure/current",
-    "instance": "current",
+    "address": "test/openweathermap/Amsterdam/$output/snow/hour",
+    "instance": "hour",
     "nodeID": "Amsterdam",
-    "type": "atmosphericpressure"
+    "type": "snow"
   },
   {
-    "address": "test/openweathermap/Vancouver/$output/weather/current",
-    "instance": "current",
-    "nodeID": "Vancouver",
-    "type": "weather"
+    "address": "test/openweathermap/Amsterdam/$output/atmosphericpressure/min",
+    "instance": "min",
+    "nodeID": "Amsterdam",
+    "type": "atmosphericpressure"
   },
   {
     "address": "test/openweathermap/Vancouver/$output/weather/forecast",
@@ -24,70 +24,10 @@
     "type": "humidity"
   },
   {
-    "address": "test/openweathermap/Amsterdam/$output/windspeed/current",
-    "instance": "current",
-    "nodeID": "Amsterdam",
-    "type": "windspeed"
-  },
-  {
-    "address": "test/openweathermap/Amsterdam/$output/atmosphericpressure/min",
-    "instance": "min",
-    "nodeID": "Amsterdam",
-    "type": "atmosphericpressure"
-  },
-  {
-    "address": "test/openweathermap/Vancouver/$output/atmosphericpressure/current",
-    "instance": "current",
-    "nodeID": "Vancouver",
-    "type": "atmosphericpressure"
-  },
-  {
-    "address": "test/openweathermap/Vancouver/$output/temperature/max",
-    "instance": "max",
-    "nodeID": "Vancouver",
-    "type": "temperature"
-  },
-  {
-    "address": "test/openweathermap/Vancouver/$output/snow/hour",
-    "instance": "hour",
-    "nodeID": "Vancouver",
-    "type": "snow"
-  },
-  {
-    "address": "test/openweathermap/Amsterdam/$output/weather/current",
-    "instance": "current",
-    "nodeID": "Amsterdam",
-    "type": "weather"
-  },
-  {
     "address": "test/openweathermap/Amsterdam/$output/rain/hour",
     "instance": "hour",
     "nodeID": "Amsterdam",
     "type": "rain"
-  },
-  {
-    "address": "test/openweathermap/Amsterdam/$output/snow/hour",
-    "instance": "hour",
-    "nodeID": "Amsterdam",
-    "type": "snow"
-  },
-  {
-    "address": "test/openweathermap/Amsterdam/$output/weather/forecast",
-    "instance": "forecast",
-    "nodeID": "Amsterdam",
-    "type": "weather"
-  },
-  {
-    "address": "test/openweathermap/Vancouver/$output/temperature/current",
-    "instance": "current",
-    "nodeID": "Vancouver",
-    "type": "temperature"
-  },
-  {
-    "address": "test/openweathermap/Vancouver/$output/windheading/current",
-    "instance": "current",
-    "nodeID": "Vancouver",
-    "type": "windheading"
   },
   {
     "address": "test/openweathermap/Vancouver/$output/rain/hour",
@@ -96,9 +36,45 @@
     "type": "rain"
   },
   {
-    "address": "test/openweathermap/Amsterdam/$output/temperature/current",
+    "address": "test/openweathermap/Vancouver/$output/snow/hour",
+    "instance": "hour",
+    "nodeID": "Vancouver",
+    "type": "snow"
+  },
+  {
+    "address": "test/openweathermap/Vancouver/$output/atmosphericpressure/min",
+    "instance": "min",
+    "nodeID": "Vancouver",
+    "type": "atmosphericpressure"
+  },
+  {
+    "address": "test/openweathermap/Amsterdam/$output/windspeed/current",
     "instance": "current",
     "nodeID": "Amsterdam",
+    "type": "windspeed"
+  },
+  {
+    "address": "test/openweathermap/Vancouver/$output/windheading/current",
+    "instance": "current",
+    "nodeID": "Vancouver",
+    "type": "windheading"
+  },
+  {
+    "address": "test/openweathermap/Vancouver/$output/atmosphericpressure/current",
+    "instance": "current",
+    "nodeID": "Vancouver",
+    "type": "atmosphericpressure"
+  },
+  {
+    "address": "test/openweathermap/Vancouver/$output/windspeed/current",
+    "instance": "current",
+    "nodeID": "Vancouver",
+    "type": "windspeed"
+  },
+  {
+    "address": "test/openweathermap/Vancouver/$output/temperature/max",
+    "instance": "max",
+    "nodeID": "Vancouver",
     "type": "temperature"
   },
   {
@@ -108,9 +84,33 @@
     "type": "windheading"
   },
   {
+    "address": "test/openweathermap/Vancouver/$output/weather/current",
+    "instance": "current",
+    "nodeID": "Vancouver",
+    "type": "weather"
+  },
+  {
+    "address": "test/openweathermap/Amsterdam/$output/atmosphericpressure/current",
+    "instance": "current",
+    "nodeID": "Amsterdam",
+    "type": "atmosphericpressure"
+  },
+  {
+    "address": "test/openweathermap/Amsterdam/$output/weather/forecast",
+    "instance": "forecast",
+    "nodeID": "Amsterdam",
+    "type": "weather"
+  },
+  {
     "address": "test/openweathermap/Amsterdam/$output/temperature/max",
     "instance": "max",
     "nodeID": "Amsterdam",
+    "type": "temperature"
+  },
+  {
+    "address": "test/openweathermap/Vancouver/$output/temperature/current",
+    "instance": "current",
+    "nodeID": "Vancouver",
     "type": "temperature"
   },
   {
@@ -120,15 +120,15 @@
     "type": "humidity"
   },
   {
-    "address": "test/openweathermap/Vancouver/$output/windspeed/current",
+    "address": "test/openweathermap/Amsterdam/$output/weather/current",
     "instance": "current",
-    "nodeID": "Vancouver",
-    "type": "windspeed"
+    "nodeID": "Amsterdam",
+    "type": "weather"
   },
   {
-    "address": "test/openweathermap/Vancouver/$output/atmosphericpressure/min",
-    "instance": "min",
-    "nodeID": "Vancouver",
-    "type": "atmosphericpressure"
+    "address": "test/openweathermap/Amsterdam/$output/temperature/current",
+    "instance": "current",
+    "nodeID": "Amsterdam",
+    "type": "temperature"
   }
 ]

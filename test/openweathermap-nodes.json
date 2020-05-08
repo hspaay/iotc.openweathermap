@@ -1,110 +1,65 @@
 [
   {
-    "node": {
-      "id": "$publisher",
+    "id": "Amsterdam",
+    "address": "test/openweathermap/Amsterdam/$node",
+    "config": {
+      "language": {
+        "datatype": "enum",
+        "default": "en",
+        "description": "Reporting language. See https://openweathermap.org/current for more options",
+        "id": "language"
+      }
+    },
+    "publisher": "openweathermap",
+    "runstate": "",
+    "type": "weatherforecast",
+    "zone": "test"
+  },
+  {
+    "id": "Vancouver",
+    "address": "test/openweathermap/Vancouver/$node",
+    "config": {
+      "language": {
+        "datatype": "enum",
+        "default": "en",
+        "description": "Reporting language. See https://openweathermap.org/current for more options",
+        "id": "language"
+      }
+    },
+    "publisher": "openweathermap",
+    "runstate": "",
+    "type": "weatherforecast",
+    "zone": "test"
+  },
+  {
+    "id": "$publisher",
+    "address": "test/openweathermap/$publisher/$node",
+    "identity": {
       "address": "test/openweathermap/$publisher/$node",
-      "identity": {
-        "address": "test/openweathermap/$publisher/$node",
-        "expires": "",
-        "location": "",
-        "organization": "",
-        "publicKeyCrypto": "",
-        "publicKeySigning": "-----BEGIN PUBLIC KEY-----\nMFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAE2wkuhq4fvv+W7bdNMfBejOOfzKoT\nbh1yBSA963kFUDHTaAjfEoK/9vj2D1kTYJ3uiDW8C7j9O6TLucqfZHzQ+Q==\n-----END PUBLIC KEY-----\n",
-        "publisher": "openweathermap",
-        "timestamp": "2020-05-05T23:29:18.140-0700",
-        "url": "",
-        "zone": "test"
-      },
+      "expires": "",
+      "location": "",
+      "organization": "",
+      "publicKeyCrypto": "",
+      "publicKeySigning": "-----BEGIN PUBLIC KEY-----\nMFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAERbbCMJ5WNs+LYuRTE0Lb35H60y9J\n+J5Cp9WApPL5h+SUBtjhk8abnOqn3+OopwwamfqDpdKTVkPEc6UhKPfk0g==\n-----END PUBLIC KEY-----\n",
       "publisher": "openweathermap",
-      "runstate": "",
-      "type": "adapter",
+      "timestamp": "2020-05-07T19:28:47.317-0700",
+      "url": "",
       "zone": "test"
-    }
+    },
+    "publisher": "openweathermap",
+    "runstate": "",
+    "type": "adapter",
+    "zone": "test"
   },
   {
-    "node": {
-      "id": "$publisher",
-      "address": "test/onewire/$publisher/$node",
-      "identity": {
-        "address": "test/onewire/$publisher/$node",
-        "expires": "",
-        "location": "",
-        "organization": "",
-        "publicKeyCrypto": "",
-        "publicKeySigning": "-----BEGIN PUBLIC KEY-----\nMFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEMu716JA//btOgpeZBqofFKAZnH2Y\nF2n+wUI/mb7h0JDV1gVKZPctYLQueXn2YyvTmcENRKlxlnSG58knI9AdLw==\n-----END PUBLIC KEY-----\n",
-        "publisher": "onewire",
-        "timestamp": "2020-05-02T10:26:29.861-0700",
-        "url": "",
-        "zone": "test"
-      },
-      "publisher": "onewire",
-      "runstate": "",
-      "type": "adapter",
-      "zone": "test"
-    }
-  },
-  {
-    "node": {
-      "id": "Vancouver",
-      "address": "test/openweathermap/Vancouver/$node",
-      "config": {
-        "language": {
-          "datatype": "enum",
-          "default": "en",
-          "description": "Reporting language. See https://openweathermap.org/current for more options",
-          "id": "language"
-        }
-      },
-      "publisher": "openweathermap",
-      "runstate": "error",
-      "status": {
-        "lasterror": "Current weather not available"
-      },
-      "type": "weatherforecast",
-      "zone": "test"
-    }
-  },
-  {
-    "node": {
-      "id": "Amsterdam",
-      "address": "test/openweathermap/Amsterdam/$node",
-      "config": {
-        "language": {
-          "datatype": "enum",
-          "default": "en",
-          "description": "Reporting language. See https://openweathermap.org/current for more options",
-          "id": "language"
-        }
-      },
-      "publisher": "openweathermap",
-      "runstate": "error",
-      "status": {
-        "lasterror": "Current weather not available"
-      },
-      "type": "weatherforecast",
-      "zone": "test"
-    }
-  },
-  {
-    "node": {
-      "id": "$publisher",
-      "address": "test/zone1/$publisher/$node",
-      "identity": {
-        "address": "test/zone1/$publisher/$node",
-        "expires": "",
-        "location": "",
-        "organization": "",
-        "publicKeyCrypto": "",
-        "publicKeySigning": "-----BEGIN PUBLIC KEY-----\nMFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEiw1u3CTSYrkLmpOurtPqsNuLkNN5\nqrywZqMQOU7uYgpn0EEUbwGxKFZGYBql1MnWQcz2LDCCau1dWOT9bp4FTA==\n-----END PUBLIC KEY-----\n",
-        "publisher": "zone1",
-        "timestamp": "2020-05-01T16:09:45.139-0700",
-        "url": "",
-        "zone": "test"
-      },
-      "publisher": "zone1",
-      "runstate": "",
-      "type": "adapter",
-      "zone": "test"
-    }
+    "id": "",
+    "address": "",
+    "publisher": "",
+    "runstate": "error",
+    "status": {
+      "lasterror": "Current weather not available"
+    },
+    "type": "",
+    "zone": ""
   }
 ]

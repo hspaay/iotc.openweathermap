@@ -51,19 +51,19 @@ func (weatherApp *WeatherApp) PublishNodes(weatherPub *publisher.Publisher) {
 		weatherPub.Nodes.SetNodeConfig(cityNode.Address, lc)
 
 		// Add individual outputs for each weather info type
-		outputs.NewOutput(cityNode, iotc.OutputTypeWeather, CurrentWeatherInst)
-		outputs.NewOutput(cityNode, iotc.OutputTypeTemperature, CurrentWeatherInst)
-		outputs.NewOutput(cityNode, iotc.OutputTypeHumidity, CurrentWeatherInst)
-		outputs.NewOutput(cityNode, iotc.OutputTypeAtmosphericPressure, CurrentWeatherInst)
-		outputs.NewOutput(cityNode, iotc.OutputTypeWindHeading, CurrentWeatherInst)
-		outputs.NewOutput(cityNode, iotc.OutputTypeWindSpeed, CurrentWeatherInst)
-		outputs.NewOutput(cityNode, iotc.OutputTypeRain, LastHourWeatherInst)
-		outputs.NewOutput(cityNode, iotc.OutputTypeSnow, LastHourWeatherInst)
+		outputs.UpdateOutput(nodes.NewOutput(cityNode, iotc.OutputTypeWeather, CurrentWeatherInst))
+		outputs.UpdateOutput(nodes.NewOutput(cityNode, iotc.OutputTypeTemperature, CurrentWeatherInst))
+		outputs.UpdateOutput(nodes.NewOutput(cityNode, iotc.OutputTypeHumidity, CurrentWeatherInst))
+		outputs.UpdateOutput(nodes.NewOutput(cityNode, iotc.OutputTypeAtmosphericPressure, CurrentWeatherInst))
+		outputs.UpdateOutput(nodes.NewOutput(cityNode, iotc.OutputTypeWindHeading, CurrentWeatherInst))
+		outputs.UpdateOutput(nodes.NewOutput(cityNode, iotc.OutputTypeWindSpeed, CurrentWeatherInst))
+		outputs.UpdateOutput(nodes.NewOutput(cityNode, iotc.OutputTypeRain, LastHourWeatherInst))
+		outputs.UpdateOutput(nodes.NewOutput(cityNode, iotc.OutputTypeSnow, LastHourWeatherInst))
 
 		// todo: Add outputs for various forecasts. This needs a paid account so maybe some other time.
-		outputs.NewOutput(cityNode, iotc.OutputTypeWeather, ForecastWeatherInst)
-		outputs.NewOutput(cityNode, iotc.OutputTypeTemperature, "max")
-		outputs.NewOutput(cityNode, iotc.OutputTypeAtmosphericPressure, "min")
+		outputs.UpdateOutput(nodes.NewOutput(cityNode, iotc.OutputTypeWeather, ForecastWeatherInst))
+		outputs.UpdateOutput(nodes.NewOutput(cityNode, iotc.OutputTypeTemperature, "max"))
+		outputs.UpdateOutput(nodes.NewOutput(cityNode, iotc.OutputTypeAtmosphericPressure, "min"))
 	}
 }
 
@@ -160,7 +160,7 @@ func (weatherApp *WeatherApp) UpdateForecast(weatherPub *publisher.Publisher) {
 
 // OnNodeConfigHandler handles requests to update node configuration
 func (weatherApp *WeatherApp) OnNodeConfigHandler(
-	node *nodes.Node, config iotc.NodeAttrMap) iotc.NodeAttrMap {
+	node *iotc.NodeDiscoveryMessage, config iotc.NodeAttrMap) iotc.NodeAttrMap {
 	return nil
 }
 
