@@ -21,7 +21,7 @@ func main() {
 	messenger := messenger.NewMqttMessenger(messengerConfig, logger)
 	weatherPub := publisher.NewPublisher(messengerConfig.Zone,
 		weatherApp.PublisherID, messenger)
-	weatherPub.PersistNodes(configFolder, true)
+	weatherPub.SetPersistNodes(configFolder, true)
 
 	// Discover the node(s) and outputs. Use default for republishing discovery
 	weatherPub.SetDiscoveryInterval(0, weatherApp.PublishNodes)

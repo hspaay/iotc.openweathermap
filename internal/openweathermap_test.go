@@ -30,7 +30,7 @@ func TestNewPublisher(t *testing.T) {
 	// testMessenger := messenger.NewMqttMessenger(mqttServerAddress, 0, loginName, password, clientID, logger) // use default mqtt port
 	// config.LoadAppConfig("", publisherID, nil, &testConfig)
 	persist.LoadMessengerConfig(configFolder, messengerConfig)
-	testMessenger := messenger.NewDummyMessenger(messengerConfig, nil)
+	testMessenger := messenger.NewMessenger(messengerConfig, nil)
 	weatherPub := publisher.NewPublisher(messengerConfig.Zone, weatherApp.PublisherID, testMessenger)
 	// weatherPub.PersistNodes(configFolder, false)
 
@@ -45,7 +45,7 @@ func TestNewPublisher(t *testing.T) {
 
 func TestPublishWeather(t *testing.T) {
 	persist.LoadMessengerConfig(configFolder, messengerConfig)
-	testMessenger := messenger.NewDummyMessenger(messengerConfig, nil)
+	testMessenger := messenger.NewMessenger(messengerConfig, nil)
 	weatherPub := publisher.NewPublisher(messengerConfig.Zone, weatherApp.PublisherID, testMessenger)
 	// weatherPub.PersistNodes(configFolder, false)
 
@@ -63,7 +63,7 @@ func TestPublishWeather(t *testing.T) {
 
 func TestPublishForecast(t *testing.T) {
 	persist.LoadMessengerConfig(configFolder, messengerConfig)
-	testMessenger := messenger.NewDummyMessenger(messengerConfig, nil)
+	testMessenger := messenger.NewMessenger(messengerConfig, nil)
 	weatherPub := publisher.NewPublisher(messengerConfig.Zone, weatherApp.PublisherID, testMessenger)
 	// weatherPub.PersistNodes(configFolder, false)
 
@@ -86,7 +86,7 @@ func TestMain(t *testing.T) {
 	persist.LoadAppConfig("", weatherApp.PublisherID, &weatherApp)
 	persist.LoadMessengerConfig(configFolder, messengerConfig)
 
-	messenger := messenger.NewMqttMessenger(messengerConfig, logger)
+	messenger := messenger.NewMessenger(messengerConfig, logger)
 	weatherPub := publisher.NewPublisher(messengerConfig.Zone, weatherApp.PublisherID, messenger)
 	// weatherPub.PersistNodes(configFolder, false)
 

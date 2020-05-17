@@ -123,17 +123,17 @@ func (weatherApp *WeatherApp) UpdateForecast(weatherPub *publisher.Publisher) {
 			language := node.Config["language"].Value
 			dailyForecast, err := GetDailyForecast(apikey, node.ID, language)
 			if err != nil {
-				weatherPub.Nodes.SetErrorStatus(node.Address, "Error getting the daily forecast")
+				weatherPub.Nodes.SetErrorStatus(node.Address, "UpdateForecast: Error getting the daily forecast")
 				return
 			} else if dailyForecast.List == nil {
-				weatherPub.Nodes.SetErrorStatus(node.Address, "Daily forecast not provided")
+				weatherPub.Nodes.SetErrorStatus(node.Address, "UpdateForecast: Daily forecast not provided")
 				return
 			}
 			// build forecast history lists of weather and temperature forecasts
 			// TODO: can this be done as a future history publication instead?
-			weatherList := make(iotc.OutputHistoryList, 0)
-			maxTempList := make(iotc.OutputHistoryList, 0)
-			minTempList := make(iotc.OutputHistoryList, 0)
+			weatherList := make(nodes.OutputForecast, 0)
+			maxTempList := make(nodes.OutputForecast, 0)
+			minTempList := make(nodes.OutputForecast, 0)
 
 			for _, forecast := range dailyForecast.List {
 				epochTime := int64(forecast.Date)
@@ -152,9 +152,11 @@ func (weatherApp *WeatherApp) UpdateForecast(weatherPub *publisher.Publisher) {
 				outputValue.Value = fmt.Sprintf("%.1f", forecast.Temp.Min)
 				minTempList = append(maxTempList, outputValue)
 			}
-			weatherPub.UpdateForecast(node, iotc.OutputTypeWeather, ForecastWeatherInst, weatherList)
-			weatherPub.UpdateForecast(node, iotc.OutputTypeTemperature, "max", maxTempList)
-			weatherPub.UpdateForecast(node, iotc.OutputTypeTemperature, "min", minTempList)
+			cityAddress := node.Address
+			outputForecasts := weatherPub.OutputForecasts
+			outputForecasts.UpdateForecast(cityAddress, iotc.OutputTypeWeather, ForecastWeatherInst, weatherList)
+			outputForecasts.UpdateForecast(cityAddress, iotc.OutputTypeTemperature, "max", maxTempList)
+			outputForecasts.UpdateForecast(cityAddress, iotc.OutputTypeTemperature, "min", minTempList)
 
 		}
 	}

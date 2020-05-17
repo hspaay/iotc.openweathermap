@@ -1,4 +1,6 @@
 # Test yaml configuration for iotconnect messenger
+# messenger: "DummyMessenger"
+messenger: "MQTTMessenger"
 
 server: "localhost"
 
