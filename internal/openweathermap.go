@@ -37,8 +37,8 @@ type WeatherApp struct {
 
 // PublishNodes creates the nodes and outputs
 func (weatherApp *WeatherApp) PublishNodes(weatherPub *publisher.Publisher) {
-	pubNode := weatherPub.PublisherNode()
-	zone := pubNode.Zone
+	// pubNode := weatherPub.PublisherNode()
+	zone := weatherPub.Zone
 	outputs := weatherPub.Outputs
 
 	// Create a node for each city with temperature outputs
@@ -83,10 +83,10 @@ func (weatherApp *WeatherApp) UpdateWeather(weatherPub *publisher.Publisher) {
 
 	// publish the current weather for each of the city nodes
 	for _, node := range weatherPub.Nodes.GetAllNodes() {
-		if node.ID != iotc.PublisherNodeID {
+		if node.NodeID != iotc.PublisherNodeID {
 			cityAddr := node.Address
 			language := node.Config["language"].Value
-			currentWeather, err := GetCurrentWeather(apikey, node.ID, language)
+			currentWeather, err := GetCurrentWeather(apikey, node.NodeID, language)
 			if err != nil {
 				weatherPub.Nodes.SetErrorStatus(cityAddr, "Current weather not available")
 				return
@@ -119,9 +119,9 @@ func (weatherApp *WeatherApp) UpdateForecast(weatherPub *publisher.Publisher) {
 
 	// publish the daily forecast weather for each of the city nodes
 	for _, node := range weatherPub.Nodes.GetAllNodes() {
-		if node.ID != iotc.PublisherNodeID {
+		if node.NodeID != iotc.PublisherNodeID {
 			language := node.Config["language"].Value
-			dailyForecast, err := GetDailyForecast(apikey, node.ID, language)
+			dailyForecast, err := GetDailyForecast(apikey, node.NodeID, language)
 			if err != nil {
 				weatherPub.Nodes.SetErrorStatus(node.Address, "UpdateForecast: Error getting the daily forecast")
 				return
