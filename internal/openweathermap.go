@@ -88,21 +88,21 @@ func (weatherApp *WeatherApp) UpdateWeather(weatherPub *publisher.Publisher) {
 			language := node.Config["language"].Value
 			currentWeather, err := GetCurrentWeather(apikey, node.NodeID, language)
 			if err != nil {
-				weatherPub.Nodes.SetErrorStatus(cityAddr, "Current weather not available")
-				return
+				weatherPub.Nodes.SetErrorStatus(cityAddr, "Current weather not available: "+err.Error())
+			} else {
+				var weatherDescription string = ""
+				if len(currentWeather.Weather) > 0 {
+					weatherDescription = currentWeather.Weather[0].Description
+				}
+				outputHistory.UpdateOutputValue(cityAddr, iotc.OutputTypeWeather, CurrentWeatherInst, weatherDescription)
+				outputHistory.UpdateOutputValue(cityAddr, iotc.OutputTypeTemperature, CurrentWeatherInst, fmt.Sprintf("%.1f", currentWeather.Main.Temperature))
+				outputHistory.UpdateOutputValue(cityAddr, iotc.OutputTypeHumidity, CurrentWeatherInst, fmt.Sprintf("%d", currentWeather.Main.Humidity))
+				outputHistory.UpdateOutputValue(cityAddr, iotc.OutputTypeAtmosphericPressure, CurrentWeatherInst, fmt.Sprintf("%.0f", currentWeather.Main.Pressure))
+				outputHistory.UpdateOutputValue(cityAddr, iotc.OutputTypeWindSpeed, CurrentWeatherInst, fmt.Sprintf("%.1f", currentWeather.Wind.Speed))
+				outputHistory.UpdateOutputValue(cityAddr, iotc.OutputTypeWindHeading, CurrentWeatherInst, fmt.Sprintf("%.0f", currentWeather.Wind.Heading))
+				outputHistory.UpdateOutputValue(cityAddr, iotc.OutputTypeRain, LastHourWeatherInst, fmt.Sprintf("%.1f", currentWeather.Rain.LastHour*1000))
+				outputHistory.UpdateOutputValue(cityAddr, iotc.OutputTypeSnow, LastHourWeatherInst, fmt.Sprintf("%.1f", currentWeather.Snow.LastHour*1000))
 			}
-			var weatherDescription string = ""
-			if len(currentWeather.Weather) > 0 {
-				weatherDescription = currentWeather.Weather[0].Description
-			}
-			outputHistory.UpdateOutputValue(cityAddr, iotc.OutputTypeWeather, CurrentWeatherInst, weatherDescription)
-			outputHistory.UpdateOutputValue(cityAddr, iotc.OutputTypeTemperature, CurrentWeatherInst, fmt.Sprintf("%.1f", currentWeather.Main.Temperature))
-			outputHistory.UpdateOutputValue(cityAddr, iotc.OutputTypeHumidity, CurrentWeatherInst, fmt.Sprintf("%d", currentWeather.Main.Humidity))
-			outputHistory.UpdateOutputValue(cityAddr, iotc.OutputTypeAtmosphericPressure, CurrentWeatherInst, fmt.Sprintf("%.0f", currentWeather.Main.Pressure))
-			outputHistory.UpdateOutputValue(cityAddr, iotc.OutputTypeWindSpeed, CurrentWeatherInst, fmt.Sprintf("%.1f", currentWeather.Wind.Speed))
-			outputHistory.UpdateOutputValue(cityAddr, iotc.OutputTypeWindHeading, CurrentWeatherInst, fmt.Sprintf("%.0f", currentWeather.Wind.Heading))
-			outputHistory.UpdateOutputValue(cityAddr, iotc.OutputTypeRain, LastHourWeatherInst, fmt.Sprintf("%.1f", currentWeather.Rain.LastHour*1000))
-			outputHistory.UpdateOutputValue(cityAddr, iotc.OutputTypeSnow, LastHourWeatherInst, fmt.Sprintf("%.1f", currentWeather.Snow.LastHour*1000))
 		}
 	}
 
