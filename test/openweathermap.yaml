@@ -1,5 +1,8 @@
+publisherId: "testweathermap"
+
 cities:
   - Amsterdam
   - Vancouver
 
 apikey: "please register"
+

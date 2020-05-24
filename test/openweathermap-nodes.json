@@ -1,0 +1,45 @@
+[
+  {
+    "address": "/openweathermap/$publisher/$node",
+    "identity": {
+      "address": "/openweathermap/$publisher/$node",
+      "expires": "",
+      "location": "",
+      "organization": "",
+      "publicKeyCrypto": "",
+      "publicKeySigning": "-----BEGIN PUBLIC KEY-----\nMFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAE75OaxBfWQlgobnL9T6thahjUpRu5\nE7P7kew8HQWRW3/FPniNEvX900zxkqOfyc6HWexvbiMwVZP00ts+z7pydQ==\n-----END PUBLIC KEY-----\n",
+      "publisher": "openweathermap",
+      "timestamp": "2020-05-23T13:31:40.116-0700",
+      "url": "",
+      "zone": ""
+    },
+    "nodeId": "$publisher",
+    "type": "adapter"
+  },
+  {
+    "address": "/openweathermap/Amsterdam/$node",
+    "config": {
+      "language": {
+        "datatype": "enum",
+        "default": "en",
+        "description": "Reporting language. See https://openweathermap.org/current for more options",
+        "id": "language"
+      }
+    },
+    "nodeId": "Amsterdam",
+    "type": "weatherService"
+  },
+  {
+    "address": "/openweathermap/Vancouver/$node",
+    "config": {
+      "language": {
+        "datatype": "enum",
+        "default": "en",
+        "description": "Reporting language. See https://openweathermap.org/current for more options",
+        "id": "language"
+      }
+    },
+    "nodeId": "Vancouver",
+    "type": "weatherService"
+  }
+]

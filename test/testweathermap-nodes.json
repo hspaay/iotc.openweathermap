@@ -1,0 +1,62 @@
+[
+  {
+    "address": "local/testweathermap/$publisher/$node",
+    "identity": {
+      "address": "local/testweathermap/$publisher/$node",
+      "expires": "",
+      "location": "",
+      "organization": "",
+      "publicKeyCrypto": "",
+      "publicKeySigning": "-----BEGIN PUBLIC KEY-----\nMFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAE3aWVseG8tRNr4tciasRtwwbWQqCE\n9rEDCuFrKmSN1aWKgy/U64sA6p5ECJvMsMbdmuCdICXOTsf3FPwDFDRlCA==\n-----END PUBLIC KEY-----\n",
+      "publisher": "testweathermap",
+      "timestamp": "2020-05-23T16:17:52.056-0700",
+      "url": "",
+      "zone": "local"
+    },
+    "nodeId": "$publisher",
+    "type": "adapter"
+  },
+  {
+    "address": "/testweathermap/$publisher/$node",
+    "identity": {
+      "address": "/testweathermap/$publisher/$node",
+      "expires": "",
+      "location": "",
+      "organization": "",
+      "publicKeyCrypto": "",
+      "publicKeySigning": "-----BEGIN PUBLIC KEY-----\nMFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAE9JtsKcY0JqVkfl6P3fYvr4t3ohT6\n5mWmGjPvlK2wSH+B2DramTXloyrF9lI1RJ9baphBrC/02IsT1uMYSVszLg==\n-----END PUBLIC KEY-----\n",
+      "publisher": "testweathermap",
+      "timestamp": "2020-05-23T14:38:46.170-0700",
+      "url": "",
+      "zone": "local"
+    },
+    "nodeId": "$publisher",
+    "type": "adapter"
+  },
+  {
+    "address": "local/testweathermap/Amsterdam/$node",
+    "config": {
+      "language": {
+        "datatype": "enum",
+        "default": "en",
+        "description": "Reporting language. See https://openweathermap.org/current for more options",
+        "id": "language"
+      }
+    },
+    "nodeId": "Amsterdam",
+    "type": "weatherService"
+  },
+  {
+    "address": "local/testweathermap/Vancouver/$node",
+    "config": {
+      "language": {
+        "datatype": "enum",
+        "default": "en",
+        "description": "Reporting language. See https://openweathermap.org/current for more options",
+        "id": "language"
+      }
+    },
+    "nodeId": "Vancouver",
+    "type": "weatherService"
+  }
+]
