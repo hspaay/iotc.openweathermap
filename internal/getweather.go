@@ -154,6 +154,7 @@ func GetCurrentWeather(apikey string, city string, lang string) (*CurrentWeather
 	if err != nil {
 		return nil, err
 	}
+
 	var currentWeather *CurrentWeather
 	json.Unmarshal(rawWeather, &currentWeather)
 	return currentWeather, nil
