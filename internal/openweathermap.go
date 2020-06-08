@@ -74,31 +74,29 @@ func (weatherApp *WeatherApp) PublishNodes(pub *publisher.Publisher) {
 func (weatherApp *WeatherApp) UpdateWeather(weatherPub *publisher.Publisher) {
 
 	apikey := weatherApp.APIKey
-	weatherPub.Logger.Info("UpdateWeather")
+	weatherPub.Logger().Info("UpdateWeather")
 
 	// publish the current weather for each of the city nodes
 	for _, node := range weatherPub.Nodes.GetAllNodes() {
-		if node.NodeID != iotc.PublisherNodeID {
-			language := node.Config["language"].Value
-			currentWeather, err := GetCurrentWeather(apikey, node.NodeID, language)
-			if err != nil {
-				weatherPub.SetNodeErrorStatus(node.NodeID, iotc.NodeRunStateError, "Current weather not available: "+err.Error())
-			} else {
-				weatherPub.SetNodeErrorStatus(node.NodeID, iotc.NodeRunStateReady, "")
+		language := node.Attr["language"]
+		currentWeather, err := GetCurrentWeather(apikey, node.NodeID, language)
+		if err != nil {
+			weatherPub.SetNodeErrorStatus(node.NodeID, iotc.NodeRunStateError, "Current weather not available: "+err.Error())
+		} else {
+			weatherPub.SetNodeErrorStatus(node.NodeID, iotc.NodeRunStateReady, "")
 
-				var weatherDescription string = ""
-				if len(currentWeather.Weather) > 0 {
-					weatherDescription = currentWeather.Weather[0].Description
-				}
-				weatherPub.UpdateOutputValue(node.NodeID, iotc.OutputTypeWeather, CurrentWeatherInst, weatherDescription)
-				weatherPub.UpdateOutputValue(node.NodeID, iotc.OutputTypeTemperature, CurrentWeatherInst, fmt.Sprintf("%.1f", currentWeather.Main.Temperature))
-				weatherPub.UpdateOutputValue(node.NodeID, iotc.OutputTypeHumidity, CurrentWeatherInst, fmt.Sprintf("%d", currentWeather.Main.Humidity))
-				weatherPub.UpdateOutputValue(node.NodeID, iotc.OutputTypeAtmosphericPressure, CurrentWeatherInst, fmt.Sprintf("%.0f", currentWeather.Main.Pressure))
-				weatherPub.UpdateOutputValue(node.NodeID, iotc.OutputTypeWindSpeed, CurrentWeatherInst, fmt.Sprintf("%.1f", currentWeather.Wind.Speed))
-				weatherPub.UpdateOutputValue(node.NodeID, iotc.OutputTypeWindHeading, CurrentWeatherInst, fmt.Sprintf("%.0f", currentWeather.Wind.Heading))
-				weatherPub.UpdateOutputValue(node.NodeID, iotc.OutputTypeRain, LastHourWeatherInst, fmt.Sprintf("%.1f", currentWeather.Rain.LastHour*1000))
-				weatherPub.UpdateOutputValue(node.NodeID, iotc.OutputTypeSnow, LastHourWeatherInst, fmt.Sprintf("%.1f", currentWeather.Snow.LastHour*1000))
+			var weatherDescription string = ""
+			if len(currentWeather.Weather) > 0 {
+				weatherDescription = currentWeather.Weather[0].Description
 			}
+			weatherPub.UpdateOutputValue(node.NodeID, iotc.OutputTypeWeather, CurrentWeatherInst, weatherDescription)
+			weatherPub.UpdateOutputValue(node.NodeID, iotc.OutputTypeTemperature, CurrentWeatherInst, fmt.Sprintf("%.1f", currentWeather.Main.Temperature))
+			weatherPub.UpdateOutputValue(node.NodeID, iotc.OutputTypeHumidity, CurrentWeatherInst, fmt.Sprintf("%d", currentWeather.Main.Humidity))
+			weatherPub.UpdateOutputValue(node.NodeID, iotc.OutputTypeAtmosphericPressure, CurrentWeatherInst, fmt.Sprintf("%.0f", currentWeather.Main.Pressure))
+			weatherPub.UpdateOutputValue(node.NodeID, iotc.OutputTypeWindSpeed, CurrentWeatherInst, fmt.Sprintf("%.1f", currentWeather.Wind.Speed))
+			weatherPub.UpdateOutputValue(node.NodeID, iotc.OutputTypeWindHeading, CurrentWeatherInst, fmt.Sprintf("%.0f", currentWeather.Wind.Heading))
+			weatherPub.UpdateOutputValue(node.NodeID, iotc.OutputTypeRain, LastHourWeatherInst, fmt.Sprintf("%.1f", currentWeather.Rain.LastHour*1000))
+			weatherPub.UpdateOutputValue(node.NodeID, iotc.OutputTypeSnow, LastHourWeatherInst, fmt.Sprintf("%.1f", currentWeather.Snow.LastHour*1000))
 		}
 	}
 
@@ -115,48 +113,45 @@ func (weatherApp *WeatherApp) UpdateForecast(weatherPub *publisher.Publisher) {
 
 	// publish the daily forecast weather for each of the city nodes
 	for _, node := range weatherPub.Nodes.GetAllNodes() {
-		if node.NodeID != iotc.PublisherNodeID {
-			language := node.Config["language"].Value
-			dailyForecast, err := GetDailyForecast(apikey, node.NodeID, language)
-			if err != nil {
-				weatherPub.SetNodeErrorStatus(node.Address, iotc.NodeRunStateError, "UpdateForecast: Error getting the daily forecast")
-				return
-			} else if dailyForecast.List == nil {
-				weatherPub.SetNodeErrorStatus(node.Address, iotc.NodeRunStateError, "UpdateForecast: Daily forecast not provided")
-				return
-			}
-			weatherPub.SetNodeErrorStatus(node.Address, iotc.NodeRunStateReady, "")
-
-			// build forecast history lists of weather and temperature forecasts
-			// TODO: can this be done as a future history publication instead?
-			weatherList := make(nodes.OutputForecast, 0)
-			maxTempList := make(nodes.OutputForecast, 0)
-			minTempList := make(nodes.OutputForecast, 0)
-
-			for _, forecast := range dailyForecast.List {
-				epochTime := int64(forecast.Date)
-				timestamp := time.Unix(epochTime, 0).Format(iotc.TimeFormat)
-				outputValue := iotc.OutputValue{Timestamp: timestamp, EpochTime: epochTime, Value: ""}
-
-				// add the weather descriptions
-				var weatherDescription string = ""
-				if len(forecast.Weather) > 0 {
-					weatherDescription = forecast.Weather[0].Description
-				}
-				outputValue.Value = weatherDescription
-				weatherList = append(weatherList, outputValue)
-				outputValue.Value = fmt.Sprintf("%.1f", forecast.Temp.Max)
-				maxTempList = append(maxTempList, outputValue)
-				outputValue.Value = fmt.Sprintf("%.1f", forecast.Temp.Min)
-				minTempList = append(maxTempList, outputValue)
-			}
-			cityAddress := node.Address
-			outputForecasts := weatherPub.OutputForecasts
-			outputForecasts.UpdateForecast(cityAddress, iotc.OutputTypeWeather, ForecastWeatherInst, weatherList)
-			outputForecasts.UpdateForecast(cityAddress, iotc.OutputTypeTemperature, "max", maxTempList)
-			outputForecasts.UpdateForecast(cityAddress, iotc.OutputTypeTemperature, "min", minTempList)
-
+		language := node.Attr["language"]
+		dailyForecast, err := GetDailyForecast(apikey, node.NodeID, language)
+		if err != nil {
+			weatherPub.SetNodeErrorStatus(node.Address, iotc.NodeRunStateError, "UpdateForecast: Error getting the daily forecast")
+			return
+		} else if dailyForecast.List == nil {
+			weatherPub.SetNodeErrorStatus(node.Address, iotc.NodeRunStateError, "UpdateForecast: Daily forecast not provided")
+			return
 		}
+		weatherPub.SetNodeErrorStatus(node.Address, iotc.NodeRunStateReady, "")
+
+		// build forecast history lists of weather and temperature forecasts
+		// TODO: can this be done as a future history publication instead?
+		weatherList := make(nodes.OutputForecast, 0)
+		maxTempList := make(nodes.OutputForecast, 0)
+		minTempList := make(nodes.OutputForecast, 0)
+
+		for _, forecast := range dailyForecast.List {
+			epochTime := int64(forecast.Date)
+			timestamp := time.Unix(epochTime, 0).Format(iotc.TimeFormat)
+			outputValue := iotc.OutputValue{Timestamp: timestamp, EpochTime: epochTime, Value: ""}
+
+			// add the weather descriptions
+			var weatherDescription string = ""
+			if len(forecast.Weather) > 0 {
+				weatherDescription = forecast.Weather[0].Description
+			}
+			outputValue.Value = weatherDescription
+			weatherList = append(weatherList, outputValue)
+			outputValue.Value = fmt.Sprintf("%.1f", forecast.Temp.Max)
+			maxTempList = append(maxTempList, outputValue)
+			outputValue.Value = fmt.Sprintf("%.1f", forecast.Temp.Min)
+			minTempList = append(maxTempList, outputValue)
+		}
+		cityAddress := node.Address
+		outputForecasts := weatherPub.OutputForecasts
+		outputForecasts.UpdateForecast(cityAddress, iotc.OutputTypeWeather, ForecastWeatherInst, weatherList)
+		outputForecasts.UpdateForecast(cityAddress, iotc.OutputTypeTemperature, "max", maxTempList)
+		outputForecasts.UpdateForecast(cityAddress, iotc.OutputTypeTemperature, "min", minTempList)
 	}
 }
 

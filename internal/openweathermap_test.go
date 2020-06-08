@@ -10,10 +10,10 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-const zoneID = iotc.TestZoneID
+const domain = iotc.TestDomainID
 const configFolder = "../test"
 
-var messengerConfig = &messenger.MessengerConfig{Zone: zoneID}
+var messengerConfig = &messenger.MessengerConfig{Domain: domain}
 
 var weatherApp = WeatherApp{
 	APIKey:      "please register",
@@ -26,7 +26,7 @@ func TestNewPublisher(t *testing.T) {
 	pub, err := publisher.NewAppPublisher(AppID, configFolder, &weatherApp, false)
 	assert.NoErrorf(t, err, "error in NewAppPublisher")
 	assert.NotNil(t, weatherApp.APIKey, "Missing apikey in configuration")
-	assert.NotEmptyf(t, pub.GetPublisherID(), "Missing publisher ID")
+	assert.NotEmptyf(t, pub.PublisherID(), "Missing publisher ID")
 
 	pub.Start()
 	weatherApp.PublishNodes(pub)
@@ -61,8 +61,6 @@ func TestPublishForecast(t *testing.T) {
 func TestMain(t *testing.T) {
 	pub, err := publisher.NewAppPublisher(AppID, configFolder, &weatherApp, false)
 	assert.NoErrorf(t, err, "error in NewAppPublisher")
-
-	weatherApp := NewWeatherApp()
 
 	// Discover the node(s) and outputs. Use default for republishing discovery
 	pub.SetDiscoveryInterval(0, weatherApp.PublishNodes)

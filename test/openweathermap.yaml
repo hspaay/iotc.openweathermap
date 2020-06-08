@@ -7,5 +7,8 @@ cities:
   - Amsterdam
   - Vancouver
 
-apikey: "please register"
+# This is a demo api key and limited in the number of queries
+# Please register for a free account at https://home.openweathermap.org/users/sign_up
+# Then create an API key here: https://home.openweathermap.org/api_keys and fill it in below.
+apikey: "92dd3eaea08bcc514a801f1bff582fbb"
 

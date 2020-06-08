@@ -7,5 +7,5 @@ server: "localhost"
 login: ""
 credentials: ""
 
-# override the zone
-# zone: "local"
+# override the domain
+# domain: "local"
