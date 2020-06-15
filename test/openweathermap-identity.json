@@ -1,0 +1,17 @@
+{
+  "address": "local/openweathermap/$identity",
+  "identity": {
+   "domain": "local",
+   "issuerName": "openweathermap",
+   "location": "local",
+   "organization": "",
+   "publicKeyCrypto": "",
+   "publicKeySigning": "-----BEGIN PUBLIC KEY-----\nMFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEI9RFswLiOPd1ngdNX+0QcDQ0aC2p\n0hhSq1xCgXeiI0hI7aSrGS6gKoYbkTw/GNZgY8zAh1pmVcQ1ks1JB4CScQ==\n-----END PUBLIC KEY-----\n",
+   "publisherId": "openweathermap",
+   "timestamp": "2020-06-15T12:57:42.888-0700",
+   "validUntil": "2021-06-15T12:57:42.888-0700"
+  },
+  "signature": "",
+  "signer": "openweathermap",
+  "timestamp": "2020-06-15T12:57:42.888-0700"
+ }

@@ -11,6 +11,7 @@ import (
 )
 
 const domain = iotc.TestDomainID
+const cacheFolder = "../test/cache"
 const configFolder = "../test"
 
 var messengerConfig = &messenger.MessengerConfig{Domain: domain}
@@ -23,7 +24,7 @@ var weatherApp = WeatherApp{
 
 // TestNewPublisher instance
 func TestNewPublisher(t *testing.T) {
-	pub, err := publisher.NewAppPublisher(AppID, configFolder, &weatherApp, false)
+	pub, err := publisher.NewAppPublisher(AppID, configFolder, cacheFolder, &weatherApp, false)
 	assert.NoErrorf(t, err, "error in NewAppPublisher")
 	assert.NotNil(t, weatherApp.APIKey, "Missing apikey in configuration")
 	assert.NotEmptyf(t, pub.PublisherID(), "Missing publisher ID")
@@ -34,7 +35,7 @@ func TestNewPublisher(t *testing.T) {
 }
 
 func TestPublishWeather(t *testing.T) {
-	pub, err := publisher.NewAppPublisher(AppID, configFolder, &weatherApp, false)
+	pub, err := publisher.NewAppPublisher(AppID, configFolder, cacheFolder, &weatherApp, false)
 	assert.NoErrorf(t, err, "error in NewAppPublisher")
 	assert.NotNil(t, weatherApp.APIKey, "Missing apikey in configuration")
 
@@ -47,7 +48,7 @@ func TestPublishWeather(t *testing.T) {
 }
 
 func TestPublishForecast(t *testing.T) {
-	pub, err := publisher.NewAppPublisher(AppID, configFolder, &weatherApp, false)
+	pub, err := publisher.NewAppPublisher(AppID, configFolder, cacheFolder, &weatherApp, false)
 	assert.NoErrorf(t, err, "error in NewAppPublisher")
 
 	pub.Start()
@@ -59,7 +60,7 @@ func TestPublishForecast(t *testing.T) {
 }
 
 func TestMain(t *testing.T) {
-	pub, err := publisher.NewAppPublisher(AppID, configFolder, &weatherApp, false)
+	pub, err := publisher.NewAppPublisher(AppID, configFolder, cacheFolder, &weatherApp, false)
 	assert.NoErrorf(t, err, "error in NewAppPublisher")
 
 	// Discover the node(s) and outputs. Use default for republishing discovery
