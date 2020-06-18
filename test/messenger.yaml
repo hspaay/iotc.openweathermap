@@ -8,4 +8,6 @@ login: ""
 credentials: ""
 
 # override the domain
-# domain: "local"
+domain: "test"
+# for testing, default is "jws"
+signing: "none"   
