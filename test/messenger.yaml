@@ -9,5 +9,5 @@ credentials: ""
 
 # override the domain
 domain: "test"
-# for testing, default is "jws"
+# "none" for testing, default is "jws"
 signing: "none"   

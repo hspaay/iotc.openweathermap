@@ -42,10 +42,12 @@ func (weatherApp *WeatherApp) PublishNodes(pub *publisher.Publisher) {
 
 	// Create a node for each city with temperature outputs
 	for _, city := range weatherApp.Cities {
-		pub.NewNode(city, iotc.NodeTypeWeatherService)
-
-		lc := nodes.NewNodeConfig("language", iotc.DataTypeEnum, "Reporting language. See https://openweathermap.org/current for more options", "en")
-		pub.Nodes.UpdateNodeConfig(city, lc)
+		nodeAddr := pub.NewNode(city, iotc.NodeTypeWeatherService)
+		pub.Nodes.UpdateNodeConfig(nodeAddr, "language", &iotc.ConfigAttr{
+			DataType:    iotc.DataTypeEnum,
+			Description: "Reporting language. See https://openweathermap.org/current for more options",
+			Default:     "en",
+		})
 
 		// Add individual outputs for each weather info type
 		pub.NewOutput(city, iotc.OutputTypeWeather, CurrentWeatherInst)
@@ -79,11 +81,19 @@ func (weatherApp *WeatherApp) UpdateWeather(weatherPub *publisher.Publisher) {
 	// publish the current weather for each of the city nodes
 	for _, node := range weatherPub.Nodes.GetAllNodes() {
 		language := node.Attr["language"]
+		startTime := time.Now()
 		currentWeather, err := GetCurrentWeather(apikey, node.NodeID, language)
+		endTime := time.Now()
+		latency := endTime.Sub(startTime)
+
 		if err != nil {
 			weatherPub.SetNodeErrorStatus(node.NodeID, iotc.NodeRunStateError, "Current weather not available: "+err.Error())
 		} else {
-			weatherPub.SetNodeErrorStatus(node.NodeID, iotc.NodeRunStateReady, "")
+			weatherPub.SetNodeStatus(node.NodeID, map[iotc.NodeStatus]string{
+				iotc.NodeStatusRunState:    string(iotc.NodeRunStateReady),
+				iotc.NodeStatusLastError:   "",
+				iotc.NodeStatusLatencyMSec: fmt.Sprintf("%d", latency.Milliseconds()),
+			})
 
 			var weatherDescription string = ""
 			if len(currentWeather.Weather) > 0 {
