@@ -4,13 +4,13 @@ import (
 	"testing"
 	"time"
 
-	"github.com/hspaay/iotc.golang/iotc"
-	"github.com/hspaay/iotc.golang/messenger"
-	"github.com/hspaay/iotc.golang/publisher"
+	"github.com/iotdomain/iotdomain-go/messenger"
+	"github.com/iotdomain/iotdomain-go/publisher"
+	"github.com/iotdomain/iotdomain-go/types"
 	"github.com/stretchr/testify/assert"
 )
 
-const domain = iotc.TestDomainID
+const domain = types.TestDomainID
 const cacheFolder = "../test/cache"
 const configFolder = "../test"
 

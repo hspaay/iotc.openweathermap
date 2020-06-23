@@ -1,4 +1,4 @@
-// Package internal demonstrates building a simple IoTConnect publisher for weather forecasts
+// Package internal demonstrates building a simple publisher for weather forecasts
 // This publishes the current weather for the cities
 package internal
 
@@ -6,9 +6,9 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/hspaay/iotc.golang/iotc"
-	"github.com/hspaay/iotc.golang/nodes"
-	"github.com/hspaay/iotc.golang/publisher"
+	"github.com/iotdomain/iotdomain-go/nodes"
+	"github.com/iotdomain/iotdomain-go/publisher"
+	"github.com/iotdomain/iotdomain-go/types"
 )
 
 // CurrentWeatherInst instance name for current weather
@@ -42,27 +42,27 @@ func (weatherApp *WeatherApp) PublishNodes(pub *publisher.Publisher) {
 
 	// Create a node for each city with temperature outputs
 	for _, city := range weatherApp.Cities {
-		nodeAddr := pub.NewNode(city, iotc.NodeTypeWeatherService)
-		pub.Nodes.UpdateNodeConfig(nodeAddr, "language", &iotc.ConfigAttr{
-			DataType:    iotc.DataTypeEnum,
+		nodeAddr := pub.NewNode(city, types.NodeTypeWeatherService)
+		pub.Nodes.UpdateNodeConfig(nodeAddr, "language", &types.ConfigAttr{
+			DataType:    types.DataTypeEnum,
 			Description: "Reporting language. See https://openweathermap.org/current for more options",
 			Default:     "en",
 		})
 
 		// Add individual outputs for each weather info type
-		pub.NewOutput(city, iotc.OutputTypeWeather, CurrentWeatherInst)
-		pub.NewOutput(city, iotc.OutputTypeTemperature, CurrentWeatherInst)
-		pub.NewOutput(city, iotc.OutputTypeHumidity, CurrentWeatherInst)
-		pub.NewOutput(city, iotc.OutputTypeAtmosphericPressure, CurrentWeatherInst)
-		pub.NewOutput(city, iotc.OutputTypeWindHeading, CurrentWeatherInst)
-		pub.NewOutput(city, iotc.OutputTypeWindSpeed, CurrentWeatherInst)
-		pub.NewOutput(city, iotc.OutputTypeRain, LastHourWeatherInst)
-		pub.NewOutput(city, iotc.OutputTypeSnow, LastHourWeatherInst)
+		pub.NewOutput(city, types.OutputTypeWeather, CurrentWeatherInst)
+		pub.NewOutput(city, types.OutputTypeTemperature, CurrentWeatherInst)
+		pub.NewOutput(city, types.OutputTypeHumidity, CurrentWeatherInst)
+		pub.NewOutput(city, types.OutputTypeAtmosphericPressure, CurrentWeatherInst)
+		pub.NewOutput(city, types.OutputTypeWindHeading, CurrentWeatherInst)
+		pub.NewOutput(city, types.OutputTypeWindSpeed, CurrentWeatherInst)
+		pub.NewOutput(city, types.OutputTypeRain, LastHourWeatherInst)
+		pub.NewOutput(city, types.OutputTypeSnow, LastHourWeatherInst)
 
 		// todo: Add outputs for various forecasts. This needs a paid account so maybe some other time.
-		pub.NewOutput(city, iotc.OutputTypeWeather, ForecastWeatherInst)
-		pub.NewOutput(city, iotc.OutputTypeTemperature, "max")
-		pub.NewOutput(city, iotc.OutputTypeAtmosphericPressure, "min")
+		pub.NewOutput(city, types.OutputTypeWeather, ForecastWeatherInst)
+		pub.NewOutput(city, types.OutputTypeTemperature, "max")
+		pub.NewOutput(city, types.OutputTypeAtmosphericPressure, "min")
 	}
 }
 
@@ -72,7 +72,7 @@ func (weatherApp *WeatherApp) PublishNodes(pub *publisher.Publisher) {
 //             type: temperature- instance: current, message: value
 //             type: humidity   - instance: current, message: value
 //             etc...
-// The iotconnect library will automatically publish changes to the values
+// The go-iotdomain library will automatically publish changes to the values
 func (weatherApp *WeatherApp) UpdateWeather(weatherPub *publisher.Publisher) {
 
 	apikey := weatherApp.APIKey
@@ -87,26 +87,26 @@ func (weatherApp *WeatherApp) UpdateWeather(weatherPub *publisher.Publisher) {
 		latency := endTime.Sub(startTime)
 
 		if err != nil {
-			weatherPub.SetNodeErrorStatus(node.NodeID, iotc.NodeRunStateError, "Current weather not available: "+err.Error())
+			weatherPub.SetNodeErrorStatus(node.NodeID, types.NodeRunStateError, "Current weather not available: "+err.Error())
 		} else {
-			weatherPub.SetNodeStatus(node.NodeID, map[iotc.NodeStatus]string{
-				iotc.NodeStatusRunState:    string(iotc.NodeRunStateReady),
-				iotc.NodeStatusLastError:   "",
-				iotc.NodeStatusLatencyMSec: fmt.Sprintf("%d", latency.Milliseconds()),
+			weatherPub.SetNodeStatus(node.NodeID, map[types.NodeStatus]string{
+				types.NodeStatusRunState:    string(types.NodeRunStateReady),
+				types.NodeStatusLastError:   "",
+				types.NodeStatusLatencyMSec: fmt.Sprintf("%d", latency.Milliseconds()),
 			})
 
 			var weatherDescription string = ""
 			if len(currentWeather.Weather) > 0 {
 				weatherDescription = currentWeather.Weather[0].Description
 			}
-			weatherPub.UpdateOutputValue(node.NodeID, iotc.OutputTypeWeather, CurrentWeatherInst, weatherDescription)
-			weatherPub.UpdateOutputValue(node.NodeID, iotc.OutputTypeTemperature, CurrentWeatherInst, fmt.Sprintf("%.1f", currentWeather.Main.Temperature))
-			weatherPub.UpdateOutputValue(node.NodeID, iotc.OutputTypeHumidity, CurrentWeatherInst, fmt.Sprintf("%d", currentWeather.Main.Humidity))
-			weatherPub.UpdateOutputValue(node.NodeID, iotc.OutputTypeAtmosphericPressure, CurrentWeatherInst, fmt.Sprintf("%.0f", currentWeather.Main.Pressure))
-			weatherPub.UpdateOutputValue(node.NodeID, iotc.OutputTypeWindSpeed, CurrentWeatherInst, fmt.Sprintf("%.1f", currentWeather.Wind.Speed))
-			weatherPub.UpdateOutputValue(node.NodeID, iotc.OutputTypeWindHeading, CurrentWeatherInst, fmt.Sprintf("%.0f", currentWeather.Wind.Heading))
-			weatherPub.UpdateOutputValue(node.NodeID, iotc.OutputTypeRain, LastHourWeatherInst, fmt.Sprintf("%.1f", currentWeather.Rain.LastHour*1000))
-			weatherPub.UpdateOutputValue(node.NodeID, iotc.OutputTypeSnow, LastHourWeatherInst, fmt.Sprintf("%.1f", currentWeather.Snow.LastHour*1000))
+			weatherPub.UpdateOutputValue(node.NodeID, types.OutputTypeWeather, CurrentWeatherInst, weatherDescription)
+			weatherPub.UpdateOutputValue(node.NodeID, types.OutputTypeTemperature, CurrentWeatherInst, fmt.Sprintf("%.1f", currentWeather.Main.Temperature))
+			weatherPub.UpdateOutputValue(node.NodeID, types.OutputTypeHumidity, CurrentWeatherInst, fmt.Sprintf("%d", currentWeather.Main.Humidity))
+			weatherPub.UpdateOutputValue(node.NodeID, types.OutputTypeAtmosphericPressure, CurrentWeatherInst, fmt.Sprintf("%.0f", currentWeather.Main.Pressure))
+			weatherPub.UpdateOutputValue(node.NodeID, types.OutputTypeWindSpeed, CurrentWeatherInst, fmt.Sprintf("%.1f", currentWeather.Wind.Speed))
+			weatherPub.UpdateOutputValue(node.NodeID, types.OutputTypeWindHeading, CurrentWeatherInst, fmt.Sprintf("%.0f", currentWeather.Wind.Heading))
+			weatherPub.UpdateOutputValue(node.NodeID, types.OutputTypeRain, LastHourWeatherInst, fmt.Sprintf("%.1f", currentWeather.Rain.LastHour*1000))
+			weatherPub.UpdateOutputValue(node.NodeID, types.OutputTypeSnow, LastHourWeatherInst, fmt.Sprintf("%.1f", currentWeather.Snow.LastHour*1000))
 		}
 	}
 
@@ -126,13 +126,13 @@ func (weatherApp *WeatherApp) UpdateForecast(weatherPub *publisher.Publisher) {
 		language := node.Attr["language"]
 		dailyForecast, err := GetDailyForecast(apikey, node.NodeID, language)
 		if err != nil {
-			weatherPub.SetNodeErrorStatus(node.Address, iotc.NodeRunStateError, "UpdateForecast: Error getting the daily forecast")
+			weatherPub.SetNodeErrorStatus(node.Address, types.NodeRunStateError, "UpdateForecast: Error getting the daily forecast")
 			return
 		} else if dailyForecast.List == nil {
-			weatherPub.SetNodeErrorStatus(node.Address, iotc.NodeRunStateError, "UpdateForecast: Daily forecast not provided")
+			weatherPub.SetNodeErrorStatus(node.Address, types.NodeRunStateError, "UpdateForecast: Daily forecast not provided")
 			return
 		}
-		weatherPub.SetNodeErrorStatus(node.Address, iotc.NodeRunStateReady, "")
+		weatherPub.SetNodeErrorStatus(node.Address, types.NodeRunStateReady, "")
 
 		// build forecast history lists of weather and temperature forecasts
 		// TODO: can this be done as a future history publication instead?
@@ -142,8 +142,8 @@ func (weatherApp *WeatherApp) UpdateForecast(weatherPub *publisher.Publisher) {
 
 		for _, forecast := range dailyForecast.List {
 			epochTime := int64(forecast.Date)
-			timestamp := time.Unix(epochTime, 0).Format(iotc.TimeFormat)
-			outputValue := iotc.OutputValue{Timestamp: timestamp, EpochTime: epochTime, Value: ""}
+			timestamp := time.Unix(epochTime, 0).Format(types.TimeFormat)
+			outputValue := types.OutputValue{Timestamp: timestamp, EpochTime: epochTime, Value: ""}
 
 			// add the weather descriptions
 			var weatherDescription string = ""
@@ -159,15 +159,15 @@ func (weatherApp *WeatherApp) UpdateForecast(weatherPub *publisher.Publisher) {
 		}
 		cityAddress := node.Address
 		outputForecasts := weatherPub.OutputForecasts
-		outputForecasts.UpdateForecast(cityAddress, iotc.OutputTypeWeather, ForecastWeatherInst, weatherList)
-		outputForecasts.UpdateForecast(cityAddress, iotc.OutputTypeTemperature, "max", maxTempList)
-		outputForecasts.UpdateForecast(cityAddress, iotc.OutputTypeTemperature, "min", minTempList)
+		outputForecasts.UpdateForecast(cityAddress, types.OutputTypeWeather, ForecastWeatherInst, weatherList)
+		outputForecasts.UpdateForecast(cityAddress, types.OutputTypeTemperature, "max", maxTempList)
+		outputForecasts.UpdateForecast(cityAddress, types.OutputTypeTemperature, "min", minTempList)
 	}
 }
 
 // OnNodeConfigHandler handles requests to update node configuration
 func (weatherApp *WeatherApp) OnNodeConfigHandler(
-	node *iotc.NodeDiscoveryMessage, config iotc.NodeAttrMap) iotc.NodeAttrMap {
+	node *types.NodeDiscoveryMessage, config types.NodeAttrMap) types.NodeAttrMap {
 	return nil
 }
 

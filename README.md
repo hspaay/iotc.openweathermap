@@ -1,10 +1,11 @@
-# IoTConnect OpenWeatherMap
+# OpenWeatherMap
 
-This demonstration project written in golang publishes weather information onto an MQTT message bus following the IoTConnect standard. It obtains current weather using openweathermap.
+This demonstration project written in golang publishes weather information onto an MQTT message bus following 
+the IoTDomain standard. It obtains current weather using openweathermap.
 
 ## Dependencies
 
-This publisher does not have any further dependencies, other than listed in the iotc.golang README.md
+This publisher does not have any further dependencies, other than listed in the iotdomain-go README.md
 
 
 ## Configuration
