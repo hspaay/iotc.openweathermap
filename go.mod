@@ -1,4 +1,4 @@
-module github.com/iotdomain/iotd.openweathermap
+module openweathermap
 
 go 1.13
 
