@@ -4,7 +4,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/iotdomain/iotdomain-go/messenger"
+	"github.com/iotdomain/iotdomain-go/messaging"
 	"github.com/iotdomain/iotdomain-go/publisher"
 	"github.com/iotdomain/iotdomain-go/types"
 	"github.com/stretchr/testify/assert"
@@ -14,7 +14,7 @@ const domain = types.TestDomainID
 const cacheFolder = "../test/cache"
 const configFolder = "../test"
 
-var messengerConfig = &messenger.MessengerConfig{Domain: domain}
+var messengerConfig = &messaging.MessengerConfig{Domain: domain}
 
 var weatherApp = WeatherApp{
 	APIKey:      "please register",
@@ -64,7 +64,7 @@ func TestMain(t *testing.T) {
 	assert.NoErrorf(t, err, "error in NewAppPublisher")
 
 	// Discover the node(s) and outputs. Use default for republishing discovery
-	pub.SetDiscoveryInterval(0, weatherApp.PublishNodes)
+	// pub.SetDiscoyInterval(0, weatherApp.PublishNodes)
 	pub.SetPollInterval(30, weatherApp.UpdateWeather)
 
 	pub.Start()

@@ -6,9 +6,10 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/iotdomain/iotdomain-go/nodes"
+	"github.com/iotdomain/iotdomain-go/outputs"
 	"github.com/iotdomain/iotdomain-go/publisher"
 	"github.com/iotdomain/iotdomain-go/types"
+	"github.com/sirupsen/logrus"
 )
 
 // CurrentWeatherInst instance name for current weather
@@ -40,10 +41,9 @@ func (weatherApp *WeatherApp) PublishNodes(pub *publisher.Publisher) {
 	// pubNode := weatherPub.PublisherNode()
 	// outputs := pub.Outputs
 
-	// Create a node for each city with temperature outputs
+	// Create a node for each city with temperature outputs. The city name is the node ID
 	for _, city := range weatherApp.Cities {
-		nodeAddr := pub.NewNode(city, types.NodeTypeWeatherService)
-		pub.Nodes.UpdateNodeConfig(nodeAddr, "language", &types.ConfigAttr{
+		pub.UpdateNodeConfig(city, "language", &types.ConfigAttr{
 			DataType:    types.DataTypeEnum,
 			Description: "Reporting language. See https://openweathermap.org/current for more options",
 			Default:     "en",
@@ -76,10 +76,12 @@ func (weatherApp *WeatherApp) PublishNodes(pub *publisher.Publisher) {
 func (weatherApp *WeatherApp) UpdateWeather(weatherPub *publisher.Publisher) {
 
 	apikey := weatherApp.APIKey
-	weatherPub.Logger().Info("UpdateWeather")
+	logrus.Info("UpdateWeather start")
+
+	weatherApp.PublishNodes(weatherPub)
 
 	// publish the current weather for each of the city nodes
-	for _, node := range weatherPub.Nodes.GetAllNodes() {
+	for _, node := range weatherPub.GetNodes() {
 		language := node.Attr["language"]
 		startTime := time.Now()
 		currentWeather, err := GetCurrentWeather(apikey, node.NodeID, language)
@@ -87,9 +89,9 @@ func (weatherApp *WeatherApp) UpdateWeather(weatherPub *publisher.Publisher) {
 		latency := endTime.Sub(startTime)
 
 		if err != nil {
-			weatherPub.SetNodeErrorStatus(node.NodeID, types.NodeRunStateError, "Current weather not available: "+err.Error())
+			weatherPub.UpdateNodeErrorStatus(node.NodeID, types.NodeRunStateError, "Current weather not available: "+err.Error())
 		} else {
-			weatherPub.SetNodeStatus(node.NodeID, map[types.NodeStatus]string{
+			weatherPub.UpdateNodeStatus(node.NodeID, map[types.NodeStatus]string{
 				types.NodeStatusRunState:    string(types.NodeRunStateReady),
 				types.NodeStatusLastError:   "",
 				types.NodeStatusLatencyMSec: fmt.Sprintf("%d", latency.Milliseconds()),
@@ -122,23 +124,23 @@ func (weatherApp *WeatherApp) UpdateForecast(weatherPub *publisher.Publisher) {
 	apikey := weatherApp.APIKey
 
 	// publish the daily forecast weather for each of the city nodes
-	for _, node := range weatherPub.Nodes.GetAllNodes() {
+	for _, node := range weatherPub.GetNodes() {
 		language := node.Attr["language"]
 		dailyForecast, err := GetDailyForecast(apikey, node.NodeID, language)
 		if err != nil {
-			weatherPub.SetNodeErrorStatus(node.Address, types.NodeRunStateError, "UpdateForecast: Error getting the daily forecast")
+			weatherPub.UpdateNodeErrorStatus(node.Address, types.NodeRunStateError, "UpdateForecast: Error getting the daily forecast")
 			return
 		} else if dailyForecast.List == nil {
-			weatherPub.SetNodeErrorStatus(node.Address, types.NodeRunStateError, "UpdateForecast: Daily forecast not provided")
+			weatherPub.UpdateNodeErrorStatus(node.Address, types.NodeRunStateError, "UpdateForecast: Daily forecast not provided")
 			return
 		}
-		weatherPub.SetNodeErrorStatus(node.Address, types.NodeRunStateReady, "")
+		weatherPub.UpdateNodeErrorStatus(node.Address, types.NodeRunStateReady, "")
 
 		// build forecast history lists of weather and temperature forecasts
 		// TODO: can this be done as a future history publication instead?
-		weatherList := make(nodes.OutputForecast, 0)
-		maxTempList := make(nodes.OutputForecast, 0)
-		minTempList := make(nodes.OutputForecast, 0)
+		weatherList := make(outputs.OutputForecast, 0)
+		maxTempList := make(outputs.OutputForecast, 0)
+		minTempList := make(outputs.OutputForecast, 0)
 
 		for _, forecast := range dailyForecast.List {
 			epochTime := int64(forecast.Date)
@@ -158,16 +160,14 @@ func (weatherApp *WeatherApp) UpdateForecast(weatherPub *publisher.Publisher) {
 			minTempList = append(maxTempList, outputValue)
 		}
 		cityAddress := node.Address
-		outputForecasts := weatherPub.OutputForecasts
-		outputForecasts.UpdateForecast(cityAddress, types.OutputTypeWeather, ForecastWeatherInst, weatherList)
-		outputForecasts.UpdateForecast(cityAddress, types.OutputTypeTemperature, "max", maxTempList)
-		outputForecasts.UpdateForecast(cityAddress, types.OutputTypeTemperature, "min", minTempList)
+		weatherPub.UpdateOutputForecast(cityAddress, types.OutputTypeWeather, ForecastWeatherInst, weatherList)
+		weatherPub.UpdateOutputForecast(cityAddress, types.OutputTypeTemperature, "max", maxTempList)
+		weatherPub.UpdateOutputForecast(cityAddress, types.OutputTypeTemperature, "min", minTempList)
 	}
 }
 
 // OnNodeConfigHandler handles requests to update node configuration
-func (weatherApp *WeatherApp) OnNodeConfigHandler(
-	node *types.NodeDiscoveryMessage, config types.NodeAttrMap) types.NodeAttrMap {
+func (weatherApp *WeatherApp) OnNodeConfigHandler(nodeAddress string, config types.NodeAttrMap) types.NodeAttrMap {
 	return nil
 }
 
@@ -185,8 +185,6 @@ func Run() {
 	weatherApp := NewWeatherApp()
 	weatherPub, _ := publisher.NewAppPublisher("openweathermap", "", "", &weatherApp, true)
 
-	// Discover the node(s) and outputs. Use default for republishing discovery
-	weatherPub.SetDiscoveryInterval(0, weatherApp.PublishNodes)
 	// Update the forecast once an hour
 	weatherPub.SetPollInterval(3600, weatherApp.UpdateWeather)
 

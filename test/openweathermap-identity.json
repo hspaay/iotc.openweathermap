@@ -1,17 +1,14 @@
 {
   "address": "test/openweathermap/$identity",
-  "public": {
-   "domain": "test",
-   "issuerName": "openweathermap",
-   "location": "local",
-   "organization": "",
-   "publicKey": "-----BEGIN PUBLIC KEY-----\nMFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEUCMhCdPlKAgDKbsrVKjP0lEzAugy\nert+4olDiuhcuTnR2fJdhlxkCMSqZl5BL6ApOq5XzFsMUX/mO39mhn+D8g==\n-----END PUBLIC KEY-----\n",
-   "publisherId": "openweathermap",
-   "timestamp": "2020-06-18T09:02:21.556-0700",
-   "validUntil": "2021-06-18T09:02:21.556-0700"
-  },
-  "signature": "tRvDrc7cYtiyXa3073Zrvx2_Cqxdv95ISK3hffA5-INvgkLaoydGCq2wVIPFdjBHg6J9yAATDrxg29DrUHAHjA==",
-  "signer": "openweathermap",
-  "timestamp": "2020-06-18T09:02:21.556-0700",
-  "privateKey": "-----BEGIN PRIVATE KEY-----\nMHcCAQEEIHRIqd/sh8OrCt/v1oAzJNFk13xdPG0ijVuzp9t/agi1oAoGCCqGSM49\nAwEHoUQDQgAEUCMhCdPlKAgDKbsrVKjP0lEzAugyert+4olDiuhcuTnR2fJdhlxk\nCMSqZl5BL6ApOq5XzFsMUX/mO39mhn+D8g==\n-----END PRIVATE KEY-----\n"
+  "domain": "test",
+  "issuerName": "openweathermap",
+  "location": "local",
+  "organization": "",
+  "publicKey": "-----BEGIN PUBLIC KEY-----\nMFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEi+bHrkVzg1OA71NcsuA+VBWNdd/i\nhQdFJQ+KlXAFWsr1cRRv/yvWaDEpsEpkFoKNBsAr91dhBYBROhUR0RO1yw==\n-----END PUBLIC KEY-----\n",
+  "publisherId": "openweathermap",
+  "validUntil": "2021-07-14T23:02:08.199-0700",
+  "signature": "5DFslW2oX3qqmC68Lf2vMRf-42foOeAEWVHI90ltBPRK2rbQdIq0f1-1GCyO2TwCxJg_i8yAvn5n8sDsNB_rIg==",
+  "timestamp": "2020-07-14T23:02:08.199-0700",
+  "privateKey": "-----BEGIN PRIVATE KEY-----\nMHcCAQEEIH5VDYNC0q4CQOhUeORArA7pnzGEyxStmmkAkS2GnwxPoAoGCCqGSM49\nAwEHoUQDQgAEi+bHrkVzg1OA71NcsuA+VBWNdd/ihQdFJQ+KlXAFWsr1cRRv/yvW\naDEpsEpkFoKNBsAr91dhBYBROhUR0RO1yw==\n-----END PRIVATE KEY-----\n",
+  "sender": ""
  }
