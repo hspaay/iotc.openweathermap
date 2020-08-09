@@ -50,19 +50,19 @@ func (weatherApp *WeatherApp) PublishNodes(pub *publisher.Publisher) {
 		})
 
 		// Add individual outputs for each weather info type
-		pub.NewOutput(city, types.OutputTypeWeather, CurrentWeatherInst)
-		pub.NewOutput(city, types.OutputTypeTemperature, CurrentWeatherInst)
-		pub.NewOutput(city, types.OutputTypeHumidity, CurrentWeatherInst)
-		pub.NewOutput(city, types.OutputTypeAtmosphericPressure, CurrentWeatherInst)
-		pub.NewOutput(city, types.OutputTypeWindHeading, CurrentWeatherInst)
-		pub.NewOutput(city, types.OutputTypeWindSpeed, CurrentWeatherInst)
-		pub.NewOutput(city, types.OutputTypeRain, LastHourWeatherInst)
-		pub.NewOutput(city, types.OutputTypeSnow, LastHourWeatherInst)
+		pub.CreateOutput(city, types.OutputTypeWeather, CurrentWeatherInst)
+		pub.CreateOutput(city, types.OutputTypeTemperature, CurrentWeatherInst)
+		pub.CreateOutput(city, types.OutputTypeHumidity, CurrentWeatherInst)
+		pub.CreateOutput(city, types.OutputTypeAtmosphericPressure, CurrentWeatherInst)
+		pub.CreateOutput(city, types.OutputTypeWindHeading, CurrentWeatherInst)
+		pub.CreateOutput(city, types.OutputTypeWindSpeed, CurrentWeatherInst)
+		pub.CreateOutput(city, types.OutputTypeRain, LastHourWeatherInst)
+		pub.CreateOutput(city, types.OutputTypeSnow, LastHourWeatherInst)
 
 		// todo: Add outputs for various forecasts. This needs a paid account so maybe some other time.
-		pub.NewOutput(city, types.OutputTypeWeather, ForecastWeatherInst)
-		pub.NewOutput(city, types.OutputTypeTemperature, "max")
-		pub.NewOutput(city, types.OutputTypeAtmosphericPressure, "min")
+		pub.CreateOutput(city, types.OutputTypeWeather, ForecastWeatherInst)
+		pub.CreateOutput(city, types.OutputTypeTemperature, "max")
+		pub.CreateOutput(city, types.OutputTypeAtmosphericPressure, "min")
 	}
 }
 
@@ -160,9 +160,12 @@ func (weatherApp *WeatherApp) UpdateForecast(weatherPub *publisher.Publisher) {
 			minTempList = append(maxTempList, outputValue)
 		}
 		cityAddress := node.Address
-		weatherPub.UpdateOutputForecast(cityAddress, types.OutputTypeWeather, ForecastWeatherInst, weatherList)
-		weatherPub.UpdateOutputForecast(cityAddress, types.OutputTypeTemperature, "max", maxTempList)
-		weatherPub.UpdateOutputForecast(cityAddress, types.OutputTypeTemperature, "min", minTempList)
+		outputID := outputs.MakeOutputID(cityAddress, types.OutputTypeWeather, ForecastWeatherInst)
+		weatherPub.UpdateOutputForecast(outputID, weatherList)
+		outputID = outputs.MakeOutputID(cityAddress, types.OutputTypeTemperature, "max")
+		weatherPub.UpdateOutputForecast(cityAddress, maxTempList)
+		outputID = outputs.MakeOutputID(cityAddress, types.OutputTypeTemperature, "min")
+		weatherPub.UpdateOutputForecast(cityAddress, minTempList)
 	}
 }
 
@@ -183,7 +186,7 @@ func NewWeatherApp() *WeatherApp {
 // Run the publisher until the SIGTERM  or SIGINT signal is received
 func Run() {
 	weatherApp := NewWeatherApp()
-	weatherPub, _ := publisher.NewAppPublisher("openweathermap", "", "", &weatherApp, true)
+	weatherPub, _ := publisher.NewAppPublisher("openweathermap", "", &weatherApp, true)
 
 	// Update the forecast once an hour
 	weatherPub.SetPollInterval(3600, weatherApp.UpdateWeather)
