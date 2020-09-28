@@ -89,12 +89,12 @@ func (weatherApp *WeatherApp) UpdateWeather(weatherPub *publisher.Publisher) {
 		latency := endTime.Sub(startTime)
 
 		if err != nil {
-			weatherPub.UpdateNodeErrorStatus(node.NodeID, types.NodeRunStateError, "Current weather not available: "+err.Error())
+			weatherPub.UpdateNodeErrorStatus(node.NodeID, types.NodeStateError, "Current weather not available: "+err.Error())
 		} else {
-			weatherPub.UpdateNodeStatus(node.NodeID, map[types.NodeStatus]string{
-				types.NodeStatusRunState:    string(types.NodeRunStateReady),
-				types.NodeStatusLastError:   "",
-				types.NodeStatusLatencyMSec: fmt.Sprintf("%d", latency.Milliseconds()),
+			weatherPub.UpdateNodeStatus(node.NodeID, map[types.NodeStatusAttr]string{
+				types.NodeStatusAttrState:       string(types.NodeStateReady),
+				types.NodeStatusAttrLastError:   "",
+				types.NodeStatusAttrLatencyMSec: fmt.Sprintf("%d", latency.Milliseconds()),
 			})
 
 			var weatherDescription string = ""
@@ -128,13 +128,13 @@ func (weatherApp *WeatherApp) UpdateForecast(weatherPub *publisher.Publisher) {
 		language := node.Attr["language"]
 		dailyForecast, err := GetDailyForecast(apikey, node.NodeID, language)
 		if err != nil {
-			weatherPub.UpdateNodeErrorStatus(node.Address, types.NodeRunStateError, "UpdateForecast: Error getting the daily forecast")
+			weatherPub.UpdateNodeErrorStatus(node.Address, types.NodeStateError, "UpdateForecast: Error getting the daily forecast")
 			return
 		} else if dailyForecast.List == nil {
-			weatherPub.UpdateNodeErrorStatus(node.Address, types.NodeRunStateError, "UpdateForecast: Daily forecast not provided")
+			weatherPub.UpdateNodeErrorStatus(node.Address, types.NodeStateError, "UpdateForecast: Daily forecast not provided")
 			return
 		}
-		weatherPub.UpdateNodeErrorStatus(node.Address, types.NodeRunStateReady, "")
+		weatherPub.UpdateNodeErrorStatus(node.Address, types.NodeStateReady, "")
 
 		// build forecast history lists of weather and temperature forecasts
 		// TODO: can this be done as a future history publication instead?

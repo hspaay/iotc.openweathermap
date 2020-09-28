@@ -1,6 +1,6 @@
 package main
 
-import "openweathermap/internal"
+import "./internal"
 
 func main() {
 	internal.Run()

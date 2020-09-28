@@ -1,14 +1,14 @@
 {
   "address": "test/openweathermap/$identity",
   "domain": "test",
-  "issuerName": "openweathermap",
+  "issuerId": "openweathermap",
   "location": "local",
   "organization": "",
-  "publicKey": "-----BEGIN PUBLIC KEY-----\nMFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEi+bHrkVzg1OA71NcsuA+VBWNdd/i\nhQdFJQ+KlXAFWsr1cRRv/yvWaDEpsEpkFoKNBsAr91dhBYBROhUR0RO1yw==\n-----END PUBLIC KEY-----\n",
+  "publicKey": "-----BEGIN PUBLIC KEY-----\nMFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAE7dFGtP0X7dJM8feLd1KHcS93T1r7\nV6fiqNC07H1Ny6k/ajca5CE+hXkHkIIu8ZssW+56ItZmcI8t/3ujSOCxCQ==\n-----END PUBLIC KEY-----\n",
   "publisherId": "openweathermap",
-  "validUntil": "2021-07-14T23:02:08.199-0700",
-  "signature": "5DFslW2oX3qqmC68Lf2vMRf-42foOeAEWVHI90ltBPRK2rbQdIq0f1-1GCyO2TwCxJg_i8yAvn5n8sDsNB_rIg==",
-  "timestamp": "2020-07-14T23:02:08.199-0700",
-  "privateKey": "-----BEGIN PRIVATE KEY-----\nMHcCAQEEIH5VDYNC0q4CQOhUeORArA7pnzGEyxStmmkAkS2GnwxPoAoGCCqGSM49\nAwEHoUQDQgAEi+bHrkVzg1OA71NcsuA+VBWNdd/ihQdFJQ+KlXAFWsr1cRRv/yvW\naDEpsEpkFoKNBsAr91dhBYBROhUR0RO1yw==\n-----END PRIVATE KEY-----\n",
+  "validUntil": "2021-08-08T23:07:08.987-0700",
+  "signature": "MEYCIQDyAUpv6g2cG8N-yr4591U4BTdqemFjNh9fM86pJzpl5QIhAKpP4hCjp5MH8Mze8AEJkJOmO6UKkKhnhD655RphWFEv",
+  "timestamp": "2020-08-08T23:07:08.987-0700",
+  "privateKey": "-----BEGIN PRIVATE KEY-----\nMHcCAQEEIGlomIc9kjGttayobPjl7ALQNaDEIMzieFtZ86dVkXYgoAoGCCqGSM49\nAwEHoUQDQgAE7dFGtP0X7dJM8feLd1KHcS93T1r7V6fiqNC07H1Ny6k/ajca5CE+\nhXkHkIIu8ZssW+56ItZmcI8t/3ujSOCxCQ==\n-----END PRIVATE KEY-----\n",
   "sender": ""
  }
