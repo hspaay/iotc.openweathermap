@@ -89,12 +89,12 @@ func (weatherApp *WeatherApp) UpdateWeather(weatherPub *publisher.Publisher) {
 		latency := endTime.Sub(startTime)
 
 		if err != nil {
-			weatherPub.UpdateNodeErrorStatus(node.NodeID, types.NodeStateError, "Current weather not available: "+err.Error())
+			weatherPub.UpdateNodeErrorStatus(node.NodeID, types.NodeRunStateError, "Current weather not available: "+err.Error())
 		} else {
-			weatherPub.UpdateNodeStatus(node.NodeID, map[types.NodeStatusAttr]string{
-				types.NodeStatusAttrState:       string(types.NodeStateReady),
-				types.NodeStatusAttrLastError:   "",
-				types.NodeStatusAttrLatencyMSec: fmt.Sprintf("%d", latency.Milliseconds()),
+			weatherPub.UpdateNodeStatus(node.NodeID, map[types.NodeStatus]string{
+				types.NodeStatusRunState:    string(types.NodeRunStateReady),
+				types.NodeStatusLastError:   "",
+				types.NodeStatusLatencyMSec: fmt.Sprintf("%d", latency.Milliseconds()),
 			})
 
 			var weatherDescription string = ""
@@ -128,13 +128,13 @@ func (weatherApp *WeatherApp) UpdateForecast(weatherPub *publisher.Publisher) {
 		language := node.Attr["language"]
 		dailyForecast, err := GetDailyForecast(apikey, node.NodeID, language)
 		if err != nil {
-			weatherPub.UpdateNodeErrorStatus(node.Address, types.NodeStateError, "UpdateForecast: Error getting the daily forecast")
+			weatherPub.UpdateNodeErrorStatus(node.Address, types.NodeRunStateError, "UpdateForecast: Error getting the daily forecast")
 			return
 		} else if dailyForecast.List == nil {
-			weatherPub.UpdateNodeErrorStatus(node.Address, types.NodeStateError, "UpdateForecast: Daily forecast not provided")
+			weatherPub.UpdateNodeErrorStatus(node.Address, types.NodeRunStateError, "UpdateForecast: Daily forecast not provided")
 			return
 		}
-		weatherPub.UpdateNodeErrorStatus(node.Address, types.NodeStateReady, "")
+		weatherPub.UpdateNodeErrorStatus(node.Address, types.NodeRunStateReady, "")
 
 		// build forecast history lists of weather and temperature forecasts
 		// TODO: can this be done as a future history publication instead?
@@ -170,8 +170,8 @@ func (weatherApp *WeatherApp) UpdateForecast(weatherPub *publisher.Publisher) {
 }
 
 // OnNodeConfigHandler handles requests to update node configuration
-func (weatherApp *WeatherApp) OnNodeConfigHandler(nodeAddress string, config types.NodeAttrMap) types.NodeAttrMap {
-	return nil
+func (weatherApp *WeatherApp) OnNodeConfigHandler(nodeHWID string, config types.NodeAttrMap) {
+	// weatherApp.pub.UpdateNodeConfigValues(nodeHWID, config)
 }
 
 // NewWeatherApp creates the weather app
@@ -186,13 +186,13 @@ func NewWeatherApp() *WeatherApp {
 // Run the publisher until the SIGTERM  or SIGINT signal is received
 func Run() {
 	weatherApp := NewWeatherApp()
-	weatherPub, _ := publisher.NewAppPublisher("openweathermap", "", &weatherApp, true)
+	weatherPub, _ := publisher.NewAppPublisher("openweathermap", "", &weatherApp, "", true)
 
 	// Update the forecast once an hour
 	weatherPub.SetPollInterval(3600, weatherApp.UpdateWeather)
 
 	// handle update of node configuraiton
-	weatherPub.SetNodeConfigHandler(weatherApp.OnNodeConfigHandler)
+	// weatherPub.SetNodeConfigHandler(weatherApp.OnNodeConfigHandler)
 	// handle update of node inputs
 	// weatherPub.SetNodeInputHandler( weatherApp.OnNodeInputHandler)
 
